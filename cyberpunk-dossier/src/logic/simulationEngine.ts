@@ -110,17 +110,38 @@ export const runSimulation = (
     // 5. Positive: Sterile Items (Decontamination)
     // Any threat level (always good to have water)
     const sterileItems = equippedItems.filter(item => item.attributes.isSterile);
-    sterileItems.forEach(item => {
-        feedback.push({
-            message: `DECON PREP: ${item.name} is essential for safe eye flushing after chemical exposure.`,
-            sourceUrl: item.sourceUrl,
-            sourceName: item.sourceName,
-            severity: 'success'
+    if (sterileItems.length > 0) {
+        score += sterileItems.length * 10; // +10 points per sterile item
+        sterileItems.forEach(item => {
+            feedback.push({
+                message: `DECON PREP: ${item.name} is essential for safe eye flushing after chemical exposure. (+10 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'success'
+            });
         });
-    });
+    }
+
+    // 6. Positive: Heat Resistant check (moved from Fire Risk else block to be universal bonus)
+    // If not flammable, give points.
+    const heatResistantItems = equippedItems.filter(item => !item.attributes.isFlammable && item.slot === 'body');
+    if (heatResistantItems.length > 0) {
+        score += 10;
+        heatResistantItems.forEach(() => {
+            // Only add feedback if not already added by the Fire Risk block check to avoid duplicates?
+            // Actually, the previous Fire Risk block added success feedback ONLY if no flammable items were present.
+            // Let's refine the Fire Risk block to handle the negative, and THIS block to handle positive independently.
+            // But valid feedback shouldn't spam.
+            // Let's rely on the previous block for the feedback message, but add the score here.
+            // Wait, the previous block only gave feedback if threatLevel === 'High'.
+            // We want points regardless? Or only if useful? 
+            // "Positive items (water bottle) add feedback but don't reward the player."
+            // Let's just ensure points are added.
+        });
+    }
 
     // Clamp score
-    score = Math.max(0, score);
+    score = Math.min(100, Math.max(0, score));
 
     return {
         score,

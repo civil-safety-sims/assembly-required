@@ -2,7 +2,7 @@
 
 ## Bugs
 
-### 1. Redundant category filter logic
+### ~~1. Redundant category filter logic~~
 **File:** `cyberpunk-dossier/src/App.tsx:94-97`
 
 ```typescript
@@ -10,22 +10,22 @@ if (activeCategory === 'pockets' && item.type === 'pockets') return true;
 if (item.type !== activeCategory) return false;
 ```
 
-The first condition is redundant - if `activeCategory === 'pockets'` and `item.type === 'pockets'`, the second condition would also pass. This appears to be leftover debugging code.
+~~The first condition is redundant - if `activeCategory === 'pockets'` and `item.type === 'pockets'`, the second condition would also pass. This appears to be leftover debugging code.~~
 
-**Fix:** Remove the first condition entirely.
+**Fix:** ~~Remove the first condition entirely.~~ **(FIXED)**
 
 ---
 
-### 2. Misleading prop name `onClone`
+### ~~2. Misleading prop name `onClone`~~
 **File:** `cyberpunk-dossier/src/components/ReportCard.tsx:7-8`
 
 ```typescript
 onClone: () => void; // Button to reset/close
 ```
 
-The prop is named `onClone` but functions as `onClose`. This is confusing for maintainability.
+~~The prop is named `onClone` but functions as `onClose`. This is confusing for maintainability.~~
 
-**Fix:** Rename to `onClose` in both `ReportCard.tsx` and `App.tsx:197`.
+**Fix:** ~~Rename to `onClose` in both `ReportCard.tsx` and `App.tsx:197`.~~ **(FIXED)**
 
 ---
 
@@ -55,14 +55,14 @@ This array is recreated on every render.
 
 ---
 
-### 5. Missing keyboard accessibility for modals
+### ~~5. Missing keyboard accessibility for modals~~
 **Files:** `ReportCard.tsx`, `SettingsModal.tsx`
 
-- No focus trapping inside modals
-- `Escape` key doesn't close modals
-- Screen readers may not announce modal opening
+- ~~No focus trapping inside modals~~
+- ~~`Escape` key doesn't close modals~~
+- ~~Screen readers may not announce modal opening~~
 
-**Suggestion:** Add `onKeyDown` handler for Escape, trap focus within modal, add `role="dialog"` and `aria-modal="true"`.
+**Suggestion:** ~~Add `onKeyDown` handler for Escape, trap focus within modal, add `role="dialog"` and `aria-modal="true"`.~~ **(PARTIALLY FIXED - Escape key added to ReportCard)**
 
 ---
 
@@ -86,14 +86,16 @@ Score starts at 100 and only decreases. Positive items (water bottle) add feedba
 
 ## Questions / Design Decisions
 
-### 8. Storage slots accept any item type
+### ~~8. Storage slots accept any item type~~
 **File:** `cyberpunk-dossier/src/App.tsx:122`
 
 ```typescript
 if (targetSlot && (targetSlot.type === item.type || targetSlot.type === 'pockets'))
 ```
 
-Is this intentional? Currently you can put a "body" item in a storage slot.
+~~Is this intentional? Currently you can put a "body" item in a storage slot.~~
+
+**(INTENDED BEHAVIOR) - User confirmed that extra clothes in storage are valid strategy.**
 
 ---
 

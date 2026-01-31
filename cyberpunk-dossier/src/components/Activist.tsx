@@ -7,11 +7,11 @@ interface ActivistProps {
     equippedItems: Record<string, Item | null>;
 }
 
+const STORAGE_SLOTS = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => `slot-storage-${i}`);
+
 export const Activist = ({ slots, equippedItems }: ActivistProps) => {
     // Helper to find slot by id
     const getSlot = (id: string) => slots.find(s => s.id === id);
-
-    const storageSlots = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => `slot-storage-${i}`);
 
     return (
         <div className="w-full max-w-md flex flex-col items-center py-4 relative gap-6 my-auto">
@@ -100,7 +100,7 @@ export const Activist = ({ slots, equippedItems }: ActivistProps) => {
             <div className="w-full bg-slate-900/40 p-4 rounded-sm border border-slate-700/30">
                 <h3 className="text-xs text-slate-500 uppercase tracking-widest mb-3 font-bold">Storage</h3>
                 <div className="grid grid-cols-3 gap-3">
-                    {storageSlots.map(id => (
+                    {STORAGE_SLOTS.map(id => (
                         <div key={id}>
                             {getSlot(id) && (
                                 <DroppableSlot

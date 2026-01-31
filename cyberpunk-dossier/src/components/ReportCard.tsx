@@ -1,14 +1,26 @@
+import { useEffect } from 'react';
 import type { SimulationResult } from '../logic/simulationEngine';
 import { AlertTriangle, CheckCircle, ExternalLink } from 'lucide-react';
 import clsx from 'clsx';
 
 interface ReportCardProps {
     result: SimulationResult | null;
-    onClone: () => void; // Button to reset/close
+    onClose: () => void; // Button to reset/close
 }
 
-export const ReportCard = ({ result, onClone }: ReportCardProps) => {
+export const ReportCard = ({ result, onClose }: ReportCardProps) => {
     if (!result) return null;
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [onClose]);
 
     const isDanger = result.score < 50;
 
@@ -81,7 +93,7 @@ export const ReportCard = ({ result, onClone }: ReportCardProps) => {
                 {/* Footer */}
                 <div className="p-4 bg-slate-950 border-t border-slate-800 flex justify-end">
                     <button
-                        onClick={onClone}
+                        onClick={onClose}
                         className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-6 py-3 rounded text-sm font-bold uppercase tracking-wider transition-colors border border-slate-700 hover:border-slate-500 min-h-[44px]"
                     >
                         Return to Dossier

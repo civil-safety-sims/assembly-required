@@ -1,23 +1,23 @@
 import type { Item } from '../types';
 import { DraggableItem } from './DraggableItem';
+import { useDroppable } from '@dnd-kit/core';
 
 interface SupplyCacheProps {
     items: Item[];
 }
 
 export const SupplyCache = ({ items }: SupplyCacheProps) => {
+    const { setNodeRef } = useDroppable({
+        id: 'supply-cache',
+    });
+
     return (
-        <div className="flex flex-col gap-3 overflow-y-auto pr-2">
-            {items.map((item) => (
-                <div key={item.id} className="min-w-0">
+        <div ref={setNodeRef} className="grid grid-cols-1 gap-2 min-h-[200px] content-start">
+            {items.map(item => (
+                <div key={item.id}>
                     <DraggableItem item={item} />
                 </div>
             ))}
-            {items.length === 0 && (
-                <div className="col-span-full py-10 text-center text-slate-500 text-xs italic w-full">
-            // CACHE DEPLETED //
-                </div>
-            )}
         </div>
     );
 };

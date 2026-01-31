@@ -6,7 +6,7 @@ export interface Item {
     id: string;
     name: string;
     type: ItemType;
-    icon?: ReactNode; // Using Lucide component directly or a string identifier if needed
+    icon?: ReactNode | string; // Using Lucide component directly or a string identifier
     description?: string;
     rarity?: 'common' | 'rare' | 'legendary';
 }

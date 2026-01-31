@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { SupplyCache } from './components/SupplyCache';
 import { Activist } from './components/Activist';
 import { Briefing } from './components/Briefing';
-import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor, type DragEndEvent, closestCenter } from '@dnd-kit/core';
+import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor, type DragEndEvent, rectIntersection } from '@dnd-kit/core';
 import type { Item, Slot } from './types';
 import { DraggableItem } from './components/DraggableItem';
 import { AVAILABLE_ITEMS, type SafetyItem } from './data/gameData';
@@ -97,7 +97,6 @@ function App() {
 
       // 2. Category Filter
       if (activeCategory !== 'all') {
-        if (activeCategory === 'pockets' && item.type === 'pockets') return true; // Storage/Pockets
         if (item.type !== activeCategory) return false;
       }
 
@@ -117,6 +116,25 @@ function App() {
 
     const item = active.data.current?.item as Item;
     const slotId = over.id as string;
+
+    if (over.id === 'supply-cache') {
+      // Unequip logic
+      // Find which slot currently holds this item
+      const currentSlotId = Object.keys(equippedItems).find(key => equippedItems[key]?.id === item.id);
+
+      if (currentSlotId) {
+        setEquippedItems(prev => ({
+          ...prev,
+          [currentSlotId]: null
+        }));
+
+        setCacheItems(prev => {
+          if (prev.find(i => i.id === item.id)) return prev;
+          return [...prev, item];
+        });
+      }
+      return;
+    }
 
     const cachedItem = cacheItems.find(i => i.id === item.id);
 
@@ -139,6 +157,20 @@ function App() {
           }
           return newCache;
         });
+      }
+    } else {
+      // Moving from slot to slot (swapping or moving storage)
+      const sourceSlotId = Object.keys(equippedItems).find(key => equippedItems[key]?.id === item.id);
+      const targetSlot = SLOTS.find(s => s.id === slotId);
+
+      if (sourceSlotId && targetSlot && (targetSlot.type === item.type || targetSlot.type === 'pockets')) {
+        const currentItemInTarget = equippedItems[slotId];
+
+        setEquippedItems(prev => ({
+          ...prev,
+          [sourceSlotId]: currentItemInTarget || null, // Swap or clear source
+          [slotId]: item
+        }));
       }
     }
   };
@@ -173,7 +205,7 @@ function App() {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
+      collisionDetection={rectIntersection}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
@@ -199,7 +231,7 @@ function App() {
         />
 
         {/* Simulation Report Card Overlay */}
-        <ReportCard result={simulationResult} onClone={() => setSimulationResult(null)} />
+        <ReportCard result={simulationResult} onClose={() => setSimulationResult(null)} />
 
         {/* Background Grid Effect */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none opacity-20" />
