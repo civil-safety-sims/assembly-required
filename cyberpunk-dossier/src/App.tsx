@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { SupplyCache } from './components/SupplyCache';
 import { Activist } from './components/Activist';
 import { Briefing } from './components/Briefing';
@@ -8,6 +8,8 @@ import { DraggableItem } from './components/DraggableItem';
 import { AVAILABLE_ITEMS, type SafetyItem } from './data/gameData';
 import { runSimulation, type SimulationResult } from './logic/simulationEngine';
 import { ReportCard } from './components/ReportCard';
+import { Settings } from 'lucide-react';
+import { SettingsModal } from './components/SettingsModal';
 
 // Convert AVAILABLE_ITEMS to Item[] compatible format for the UI
 // SafetyItem uses 'slot', Item uses 'type'. We map slot -> type.
@@ -20,13 +22,23 @@ const UI_ITEMS: Item[] = AVAILABLE_ITEMS.map(i => ({
 }));
 
 const SLOTS: Slot[] = [
-  { id: 'slot-head', type: 'head', label: 'Cranial' },
-  { id: 'slot-eyes', type: 'eyes', label: 'Optics' },
-  { id: 'slot-face', type: 'face', label: 'Facial' },
+  { id: 'slot-head', type: 'head', label: 'Head' },
+  { id: 'slot-eyes', type: 'eyes', label: 'Eyes' },
+  { id: 'slot-face', type: 'face', label: 'Face' },
   { id: 'slot-body', type: 'body', label: 'Torso' },
-  { id: 'slot-hands', type: 'hands', label: 'Manipulators' },
-  { id: 'slot-pockets', type: 'pockets', label: 'Storage' },
-  { id: 'slot-feet', type: 'feet', label: 'Mobility' },
+  { id: 'slot-hand-1', type: 'hands', label: 'Hand 1' },
+  { id: 'slot-hand-2', type: 'hands', label: 'Hand 2' },
+  // Storage Slots (1-9)
+  { id: 'slot-storage-1', type: 'pockets', label: '1' },
+  { id: 'slot-storage-2', type: 'pockets', label: '2' },
+  { id: 'slot-storage-3', type: 'pockets', label: '3' },
+  { id: 'slot-storage-4', type: 'pockets', label: '4' },
+  { id: 'slot-storage-5', type: 'pockets', label: '5' },
+  { id: 'slot-storage-6', type: 'pockets', label: '6' },
+  { id: 'slot-storage-7', type: 'pockets', label: '7' },
+  { id: 'slot-storage-8', type: 'pockets', label: '8' },
+  { id: 'slot-storage-9', type: 'pockets', label: '9' },
+  { id: 'slot-feet', type: 'feet', label: 'Feet' },
 ];
 
 function App() {
@@ -36,12 +48,30 @@ function App() {
     'slot-eyes': null,
     'slot-face': null,
     'slot-body': null,
-    'slot-hands': null,
-    'slot-pockets': null,
+    'slot-hand-1': null,
+    'slot-hand-2': null,
+    'slot-storage-1': null,
+    'slot-storage-2': null,
+    'slot-storage-3': null,
+    'slot-storage-4': null,
+    'slot-storage-5': null,
+    'slot-storage-6': null,
+    'slot-storage-7': null,
+    'slot-storage-8': null,
+    'slot-storage-9': null,
     'slot-feet': null,
   });
   const [activeItem, setActiveItem] = useState<Item | null>(null);
   const [simulationResult, setSimulationResult] = useState<SimulationResult | null>(null);
+
+  // User Settings State
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [userSettings, setUserSettings] = useState({
+    useMenstrualProducts: false,
+  });
+
+  // Category Filter State
+  const [activeCategory, setActiveCategory] = useState<string>('all');
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -50,6 +80,25 @@ function App() {
       },
     })
   );
+
+  // Filter items based on settings AND category
+  const filteredCacheItems = useMemo(() => {
+    return cacheItems.filter(item => {
+      // 1. Settings Filter
+      const safetyItem = AVAILABLE_ITEMS.find(si => si.id === item.id);
+      if (safetyItem?.attributes.isAbsorbent && !userSettings.useMenstrualProducts) {
+        return false;
+      }
+
+      // 2. Category Filter
+      if (activeCategory !== 'all') {
+        if (activeCategory === 'pockets' && item.type === 'pockets') return true; // Storage/Pockets
+        if (item.type !== activeCategory) return false;
+      }
+
+      return true;
+    });
+  }, [cacheItems, userSettings.useMenstrualProducts, activeCategory]);
 
   const handleDragStart = (event: any) => {
     setActiveItem(event.active.data.current.item);
@@ -69,7 +118,8 @@ function App() {
     if (cachedItem) {
       const targetSlot = SLOTS.find(s => s.id === slotId);
 
-      if (targetSlot && targetSlot.type === item.type) {
+      // Allow drop if types match OR if the target is a storage slot (pockets)
+      if (targetSlot && (targetSlot.type === item.type || targetSlot.type === 'pockets')) {
         const currentItemInSlot = equippedItems[slotId];
 
         setEquippedItems(prev => ({
@@ -104,6 +154,17 @@ function App() {
     setSimulationResult(result);
   };
 
+  const categories = [
+    { id: 'all', label: 'All' },
+    { id: 'head', label: 'Head' },
+    { id: 'eyes', label: 'Eyes' },
+    { id: 'face', label: 'Face' },
+    { id: 'body', label: 'Body' },
+    { id: 'hands', label: 'Hands' },
+    { id: 'pockets', label: 'Storage' },
+    { id: 'feet', label: 'Feet' },
+  ];
+
   return (
     <DndContext
       sensors={sensors}
@@ -112,6 +173,25 @@ function App() {
       onDragEnd={handleDragEnd}
     >
       <div className="min-h-screen bg-slate-950 text-slate-200 p-4 md:p-8 font-mono relative overflow-hidden selection:bg-cyan-500/30">
+
+        {/* Global UI Elements */}
+
+        {/* Settings Button */}
+        <button
+          onClick={() => setIsSettingsOpen(true)}
+          className="absolute top-4 right-4 z-40 p-2 text-slate-500 hover:text-cyan-500 hover:rotate-90 transition-all bg-slate-900/50 rounded-full border border-slate-700 hover:border-cyan-500/50 backdrop-blur-sm"
+          title="Configure Protocol"
+        >
+          <Settings size={20} />
+        </button>
+
+        {/* Settings Modal */}
+        <SettingsModal
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          settings={userSettings}
+          onUpdateSettings={setUserSettings}
+        />
 
         {/* Simulation Report Card Overlay */}
         <ReportCard result={simulationResult} onClone={() => setSimulationResult(null)} />
@@ -123,14 +203,34 @@ function App() {
 
           {/* Left Column: Supply Cache - Desktop: Col 1, Mobile: Order 3 (Bottom) */}
           <section className="order-3 md:order-1 md:col-span-1 bg-slate-900/50 border border-slate-700/50 rounded-sm overflow-hidden flex flex-col backdrop-blur-sm shadow-2xl shadow-black/50 h-80 md:h-auto">
-            <header className="bg-slate-800/80 p-3 border-b border-slate-700 flex justify-between items-center">
-              <h2 className="text-emerald-500 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
-                Supply Cache
-              </h2>
-              <div className="w-2 h-2 bg-emerald-500 animate-pulse rounded-full shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+            <header className="bg-slate-800/80 p-3 border-b border-slate-700 flex flex-col gap-3">
+              <div className="flex justify-between items-center">
+                <h2 className="text-emerald-500 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                  Supply Cache
+                </h2>
+                <div className="w-2 h-2 bg-emerald-500 animate-pulse rounded-full shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+              </div>
+
+              {/* Category Filters */}
+              <div className="flex gap-2 flex-wrap pb-1 justify-start">
+                {categories.map(cat => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`
+                            px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-sm border whitespace-nowrap transition-colors
+                            ${activeCategory === cat.id
+                        ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50'
+                        : 'bg-slate-900 text-slate-500 border-slate-700 hover:text-slate-300 hover:border-slate-500'}
+                        `}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
             </header>
             <div className="flex-1 p-4 overflow-y-auto md:overflow-y-auto overflow-x-auto custom-scrollbar bg-slate-950/30">
-              <SupplyCache items={cacheItems} />
+              <SupplyCache items={filteredCacheItems} />
             </div>
           </section>
 
@@ -140,7 +240,7 @@ function App() {
               <h2 className="text-cyan-500 text-xs font-bold uppercase tracking-widest">Activist Schematic</h2>
               <div className="text-[10px] text-slate-400 font-mono">ID: 773-49-ALPHA</div>
             </header>
-            <div className="flex-1 p-6 flex justify-center items-center relative bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.05),transparent_70%)]">
+            <div className="flex-1 p-6 flex justify-center relative bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.05),transparent_70%)] overflow-y-auto custom-scrollbar">
               {/* Tactical overlay graphics */}
               <div className="absolute inset-0 pointer-events-none border-[0.5px] border-cyan-900/20 m-2 rounded-sm"></div>
               <div className="absolute top-2 left-2 w-4 h-[1px] bg-cyan-500/50"></div>

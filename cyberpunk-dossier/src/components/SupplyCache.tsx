@@ -7,7 +7,7 @@ interface SupplyCacheProps {
 
 export const SupplyCache = ({ items }: SupplyCacheProps) => {
     return (
-        <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:auto-rows-min overflow-y-auto">
+        <div className="flex flex-col gap-3 overflow-y-auto pr-2">
             {items.map((item) => (
                 <div key={item.id} className="min-w-0">
                     <DraggableItem item={item} />

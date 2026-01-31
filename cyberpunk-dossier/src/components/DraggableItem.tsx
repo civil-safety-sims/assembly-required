@@ -53,7 +53,7 @@ export const DraggableItem = ({ item, hideLabel = false }: DraggableItemProps) =
             <div className="text-slate-500">
                 <GripVertical size={14} />
             </div>
-            <div className={clsx("p-2 rounded bg-slate-900",
+            <div className={clsx("p-2 rounded bg-slate-900 shrink-0",
                 item.rarity === 'legendary' ? 'text-amber-500' :
                     item.rarity === 'rare' ? 'text-cyan-500' : 'text-slate-400'
             )}>
@@ -61,12 +61,12 @@ export const DraggableItem = ({ item, hideLabel = false }: DraggableItemProps) =
             </div>
             {!hideLabel && (
                 <div className="flex-1 min-w-0">
-                    <div className={clsx("text-xs font-bold uppercase truncate",
+                    <div className={clsx("text-sm font-bold uppercase leading-tight",
                         item.rarity === 'legendary' ? 'text-amber-200' : 'text-slate-200'
                     )}>
                         {item.name}
                     </div>
-                    <div className="text-[10px] text-slate-500 uppercase truncate">{item.type}</div>
+                    <div className="text-xs text-slate-500 uppercase leading-tight mt-0.5">{item.type}</div>
                 </div>
             )}
 

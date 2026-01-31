@@ -55,10 +55,13 @@ export const ReportCard = ({ result, onClone }: ReportCardProps) => {
                         {result.feedback.map((card, idx) => (
                             <div key={idx} className={clsx(
                                 "p-4 rounded border-l-4 bg-slate-800/50",
-                                card.severity === 'critical' ? "border-red-500" : "border-amber-500"
+                                card.severity === 'critical' ? "border-red-500" :
+                                    card.severity === 'success' ? "border-emerald-500" :
+                                        "border-amber-500"
                             )}>
                                 <div className="font-bold text-slate-200 mb-1 flex items-start gap-2">
                                     {card.severity === 'critical' && <AlertTriangle className="text-red-500 shrink-0" size={16} />}
+                                    {card.severity === 'success' && <CheckCircle className="text-emerald-500 shrink-0" size={16} />}
                                     {card.message}
                                 </div>
                                 <a

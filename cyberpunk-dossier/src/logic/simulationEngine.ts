@@ -7,7 +7,7 @@ export interface FeedbackCard {
     message: string;
     sourceUrl: string;
     sourceName: string;
-    severity: 'info' | 'warning' | 'critical';
+    severity: 'info' | 'warning' | 'critical' | 'success';
 }
 
 export interface SimulationResult {
@@ -48,6 +48,8 @@ export const runSimulation = (
     // "If ThreatLevel is High AND user wears isFlammable (Polyester) -> Add a 'Burn Risk' warning."
     if (threatLevel === 'High') {
         const flammableItems = equippedItems.filter(item => item.attributes.isFlammable);
+        const nonFlammableItems = equippedItems.filter(item => !item.attributes.isFlammable && item.slot === 'body'); // Check for body items specifically (clothes)
+
         if (flammableItems.length > 0) {
             score -= 25;
             flammableItems.forEach(item => {
@@ -56,6 +58,16 @@ export const runSimulation = (
                     sourceUrl: item.sourceUrl,
                     sourceName: item.sourceName,
                     severity: 'critical'
+                });
+            });
+        } else if (nonFlammableItems.length > 0) {
+            // Positive Feedback: Wearing non-flammable clothing
+            nonFlammableItems.forEach(item => {
+                feedback.push({
+                    message: `HEAT RESISTANT: ${item.name} is made of natural fibers and won't melt in heat.`,
+                    sourceUrl: item.sourceUrl,
+                    sourceName: item.sourceName,
+                    severity: 'success'
                 });
             });
         }
@@ -93,6 +105,18 @@ export const runSimulation = (
             });
         });
     }
+
+    // 5. Positive: Sterile Items (Decontamination)
+    // Any threat level (always good to have water)
+    const sterileItems = equippedItems.filter(item => item.attributes.isSterile);
+    sterileItems.forEach(item => {
+        feedback.push({
+            message: `DECON PREP: ${item.name} is essential for safe eye flushing after chemical exposure.`,
+            sourceUrl: item.sourceUrl,
+            sourceName: item.sourceName,
+            severity: 'success'
+        });
+    });
 
     // Clamp score
     score = Math.max(0, score);

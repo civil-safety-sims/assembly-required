@@ -74,7 +74,7 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         sourceName: 'National Lawyers Guild',
         attributes: {
             ...DEFAULT_ATTRIBUTES,
-            isAbsorbent: false,
+            isAbsorbent: true,
         },
     },
     {
