@@ -1,0 +1,18 @@
+import type { ReactNode } from 'react';
+
+export type ItemType = 'head' | 'eyes' | 'face' | 'body' | 'hands' | 'pockets' | 'feet';
+
+export interface Item {
+    id: string;
+    name: string;
+    type: ItemType;
+    icon?: ReactNode; // Using Lucide component directly or a string identifier if needed
+    description?: string;
+    rarity?: 'common' | 'rare' | 'legendary';
+}
+
+export interface Slot {
+    id: string; // e.g., 'slot-head'
+    type: ItemType;
+    label: string;
+}

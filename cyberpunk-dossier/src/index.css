@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+}
+
+@theme {
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+body {
+  @apply bg-slate-950 text-slate-200 antialiased;
+}

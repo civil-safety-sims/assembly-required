@@ -90,4 +90,17 @@ Verify that the drag-and-drop library we are using supports touch events. If not
 **2. Responsive Layout:**
 Update the 3-column layout for mobile screens:
 * On screens smaller than 768px (tablets/phones), stack the columns vertically.
-* **Order:** Top = The
+* **Order:** Top = The Briefing, Middle = The Paper Doll, Bottom = The Supply Cache.
+* Make the 'Supply Cache' scrollable horizontally so items don't take up the whole screen.
+
+**3. UI Sizing:**
+Ensure all drop zones and buttons are at least 44x44 pixels (Apple's minimum touch target size).
+
+---
+
+### PROMPT 6: Final Deployment Check
+I am ready to deploy to Firebase.
+
+1.  Run a build check to ensure no TypeScript errors.
+2.  Verify that no API keys are required (since we are using hard-coded data).
+3.  Generate the command to install the Firebase CLI and deploy this folder.
