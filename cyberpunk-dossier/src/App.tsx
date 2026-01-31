@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SupplyCache } from './components/SupplyCache';
 import { Activist } from './components/Activist';
 import { Briefing } from './components/Briefing';
-import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor, type DragEndEvent } from '@dnd-kit/core';
+import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor, type DragEndEvent, pointerWithin } from '@dnd-kit/core';
 import type { Item, Slot } from './types';
 import { DraggableItem } from './components/DraggableItem';
 import { AVAILABLE_ITEMS, type SafetyItem } from './data/gameData';
@@ -114,7 +114,12 @@ function App() {
   };
 
   return (
-    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={pointerWithin}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
       <div className="min-h-screen bg-slate-950 text-slate-200 p-4 md:p-8 font-mono relative overflow-hidden selection:bg-cyan-500/30">
 
         {/* Simulation Report Card Overlay */}
