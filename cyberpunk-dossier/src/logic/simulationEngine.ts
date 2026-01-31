@@ -1,6 +1,6 @@
 import type { SafetyItem } from '../data/gameData';
 
-export type WeatherType = 'Hot' | 'Cold' | 'Rain';
+export type WeatherTemp = 'Hot' | 'Comfortable' | 'Cold';
 export type ThreatLevelType = 'Low' | 'Medium' | 'High'; // High implies Tear Gas risk per prompt
 
 export interface FeedbackCard {
@@ -17,7 +17,8 @@ export interface SimulationResult {
 
 export const runSimulation = (
     equippedItems: SafetyItem[],
-    _weather: WeatherType,
+    _weatherTemp: WeatherTemp,
+    _isPrecipitating: boolean,
     threatLevel: ThreatLevelType
 ): SimulationResult => {
     let score = 100;

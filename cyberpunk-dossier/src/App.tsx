@@ -6,7 +6,7 @@ import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor, type Dra
 import type { Item, Slot } from './types';
 import { DraggableItem } from './components/DraggableItem';
 import { AVAILABLE_ITEMS, type SafetyItem } from './data/gameData';
-import { runSimulation, type SimulationResult } from './logic/simulationEngine';
+import { runSimulation, type SimulationResult, type WeatherTemp, type ThreatLevelType } from './logic/simulationEngine';
 import { ReportCard } from './components/ReportCard';
 import { Settings } from 'lucide-react';
 import { SettingsModal } from './components/SettingsModal';
@@ -72,6 +72,11 @@ function App() {
 
   // Category Filter State
   const [activeCategory, setActiveCategory] = useState<string>('all');
+
+  // Environmental State
+  const [weatherTemp, setWeatherTemp] = useState<WeatherTemp>('Comfortable');
+  const [isPrecipitating, setIsPrecipitating] = useState<boolean>(true); // Default to acid rain for Cyberpunk feel
+  const [threatLevel, setThreatLevel] = useState<ThreatLevelType>('High');
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -150,7 +155,7 @@ function App() {
       }
     });
 
-    const result = runSimulation(equippedSafetyItems, 'Rain', 'High');
+    const result = runSimulation(equippedSafetyItems, weatherTemp, isPrecipitating, threatLevel);
     setSimulationResult(result);
   };
 
@@ -254,7 +259,15 @@ function App() {
 
           {/* Right Column: The Briefing - Desktop: Col 4, Mobile: Order 1 (Top) */}
           <section className="order-1 md:order-3 md:col-span-1 flex flex-col gap-6">
-            <Briefing onSimulate={handleSimulate} />
+            <Briefing
+              onSimulate={handleSimulate}
+              temp={weatherTemp}
+              setTemp={setWeatherTemp}
+              precip={isPrecipitating}
+              setPrecip={setIsPrecipitating}
+              threat={threatLevel}
+              setThreat={setThreatLevel}
+            />
           </section>
 
         </div>
