@@ -2,12 +2,20 @@ import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import type { Item } from '../types';
 import clsx from 'clsx';
-import { Box, GripVertical } from 'lucide-react';
+import { Box, GripVertical, Shirt, Package, Smartphone, Pill, Droplets } from 'lucide-react';
 
 interface DraggableItemProps {
     item: Item;
     hideLabel?: boolean;
 }
+
+const ICON_MAP: Record<string, React.ReactNode> = {
+    'Shirt': <Shirt size={20} />,
+    'Package': <Package size={20} />,
+    'Smartphone': <Smartphone size={20} />,
+    'Pill': <Pill size={20} />,
+    'Droplets': <Droplets size={20} />,
+};
 
 export const DraggableItem = ({ item, hideLabel = false }: DraggableItemProps) => {
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -17,6 +25,16 @@ export const DraggableItem = ({ item, hideLabel = false }: DraggableItemProps) =
 
     const style = {
         transform: CSS.Translate.toString(transform),
+    };
+
+    // Determine the icon to render
+    // If item.icon is a string key in our map, use it. 
+    // Otherwise fallback to the item.icon if it's already a node (unlikely with current data) or Box.
+    const renderIcon = () => {
+        if (typeof item.icon === 'string' && ICON_MAP[item.icon]) {
+            return ICON_MAP[item.icon];
+        }
+        return item.icon || <Box size={20} />;
     };
 
     return (
@@ -39,7 +57,7 @@ export const DraggableItem = ({ item, hideLabel = false }: DraggableItemProps) =
                 item.rarity === 'legendary' ? 'text-amber-500' :
                     item.rarity === 'rare' ? 'text-cyan-500' : 'text-slate-400'
             )}>
-                {item.icon || <Box size={20} />}
+                {renderIcon()}
             </div>
             {!hideLabel && (
                 <div className="flex-1 min-w-0">

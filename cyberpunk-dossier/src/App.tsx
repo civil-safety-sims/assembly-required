@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SupplyCache } from './components/SupplyCache';
 import { Activist } from './components/Activist';
 import { Briefing } from './components/Briefing';
-import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor, type DragEndEvent, pointerWithin } from '@dnd-kit/core';
+import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor, type DragEndEvent, closestCenter } from '@dnd-kit/core';
 import type { Item, Slot } from './types';
 import { DraggableItem } from './components/DraggableItem';
 import { AVAILABLE_ITEMS, type SafetyItem } from './data/gameData';
@@ -14,18 +14,7 @@ import { ReportCard } from './components/ReportCard';
 const UI_ITEMS: Item[] = AVAILABLE_ITEMS.map(i => ({
   id: i.id,
   name: i.name,
-  icon: i.icon, // This is a string name, but Item expects ReactNode usually? 
-  // Wait, earlier DraggableItem rendered icon. 
-  // In types.ts: icon?: ReactNode
-  // AVAILABLE_ITEMS uses string names for Lucide icons.
-  // We need to map string names to Lucide components if we want them to show up!
-  // Or we can update DraggableItem to handle string icons?
-  // For now let's just use a placeholder or handle it in DraggableItem if possible.
-  // Update: DraggableItem renders `{item.icon || <Box size={20}/>}`. 
-  // If item.icon is a string, React might complain if we try to render it directly as node? 
-  // Actually DraggableItem just puts it in a div. String is valid ReactNode.
-  // But we want actual icons. 
-  // Let's import the specific icons we need here or generic ones.
+  icon: i.icon,
   type: i.slot, // Map slot to type
   rarity: 'common'
 }));
@@ -75,10 +64,12 @@ function App() {
     const item = active.data.current?.item as Item;
     const slotId = over.id as string;
 
-    if (cacheItems.find(i => i.id === item.id)) {
-      const targetSlot = SLOTS.find(s => s.id === slotId);
-      if (targetSlot && targetSlot.type === item.type) {
+    const cachedItem = cacheItems.find(i => i.id === item.id);
 
+    if (cachedItem) {
+      const targetSlot = SLOTS.find(s => s.id === slotId);
+
+      if (targetSlot && targetSlot.type === item.type) {
         const currentItemInSlot = equippedItems[slotId];
 
         setEquippedItems(prev => ({
@@ -116,7 +107,7 @@ function App() {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={pointerWithin}
+      collisionDetection={closestCenter}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
