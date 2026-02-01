@@ -226,7 +226,12 @@ If a source URL no longer exists or content has changed:
 
 ---
 
-## Phase 5: In-App Sources Page
+## Phase 5: In-App Sources Page [COMPLETED]
+
+**Status**: Implemented and Deployed (2026-02-01)
+- **Component**: `src/components/SourcesModal.tsx`
+- **Data**: `src/data/sources.ts`
+- **Deployment**: `https://assembly-required-woo-v1.web.app`
 
 Provide a dedicated page/modal in the app where users can browse all trusted sources directly. This serves users who:
 
@@ -319,7 +324,7 @@ This content can be displayed as a "Before You Go" checklist or guidance section
 
 ## Open Questions
 
-1. **Source priority**: Which new sources should be added first?
+1. **Source priority**: Which new sources should be added first? Answer: Start with existing trusted sources, then move on to the recommended sources to add.
 2. **Attribute granularity**: Should respirators be one attribute or split (N95 vs gas mask)? Answer: Masks should probably have two attributes, one for environmental factors and one for anti-surveillance. Example, a bandana is good for anonymity but not for chemical protection.
 3. **Weather rules**: Currently unused - should hot/cold weather trigger more rules? Answer: Yes, eventually we should check that clothing items are appropriate for the weather, including precipitation, as a mild rainy day should be different to prepare for than a hot, sunny day.
 4. **Negative items**: Should we add more "bad" items to teach what NOT to bring? Answer: Yes, especially items that are commonly mistaken for being useful, such as conflicting information on usage of milk, or something that may be seen as harmless, like wearing open toed shoes.
