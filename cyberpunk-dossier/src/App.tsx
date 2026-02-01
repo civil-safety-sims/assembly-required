@@ -340,7 +340,7 @@ function App() {
           </section>
 
           {/* Center Column: The Activist - Desktop: Col 2-3, Mobile: Order 2 (Middle) */}
-          <section className="order-2 md:order-2 md:col-span-2 bg-slate-900/50 border border-slate-700/50 rounded-sm overflow-hidden flex flex-col relative backdrop-blur-sm shadow-2xl shadow-black/50 min-h-[500px] md:min-h-0">
+          <section className="order-2 md:order-2 md:col-span-2 bg-slate-900/50 border border-slate-700/50 rounded-sm flex flex-col relative backdrop-blur-sm shadow-2xl shadow-black/50 min-h-[500px] md:min-h-0">
             <header className="bg-slate-800/80 p-3 border-b border-slate-700 flex justify-between items-center">
               <h2 className="text-cyan-500 text-xs font-bold uppercase tracking-widest">Activist Schematic</h2>
               <div className="text-[10px] text-slate-400 font-mono">ID: 773-49-ALPHA</div>

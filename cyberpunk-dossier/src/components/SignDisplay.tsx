@@ -31,12 +31,13 @@ export const SignDisplay = ({ item, side }: SignDisplayProps) => {
     };
 
     // Position logic - avoid center to prevent overlap
-    // Position logic - avoid center to prevent overlap
-    // Position the sign higher and further out so the handle (stick) aligns with the hand slot
+    // User request: "The rectangle of the sign should be higher than the head. 
+    // The stick should be to the left of the eyes box on the left, and to the right of the face box on the right"
+    // No rotation.
     const positionClasses = side === 'left'
-        ? "top-[15%] left-[-5%] origin-bottom-right -rotate-12" // Hand 1 (Left) - Sign high & left
+        ? "top-[-30%] left-[0%] origin-bottom-left" // Hand 1 (Left) - High up, aligned left
         : side === 'right'
-            ? "top-[15%] right-[-5%] origin-bottom-left rotate-12" // Hand 2 (Right) - Sign high & right
+            ? "top-[-30%] right-[0%] origin-bottom-right" // Hand 2 (Right) - High up, aligned right
             : "top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2"; // Fallback
 
     return (
