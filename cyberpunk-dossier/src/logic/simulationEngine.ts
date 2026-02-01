@@ -1,6 +1,6 @@
 import type { SafetyItem } from '../data/gameData';
 
-export type WeatherTemp = 'Hot' | 'Comfortable' | 'Cold';
+export type WeatherTemp = 'Hot' | 'Comfortable' | 'Cool' | 'Cold';
 export type ThreatLevelType = 'Low' | 'Medium' | 'High'; // High implies Tear Gas risk per prompt
 
 export interface FeedbackCard {
@@ -17,7 +17,7 @@ export interface SimulationResult {
 
 export const runSimulation = (
     equippedItems: SafetyItem[],
-    _weatherTemp: WeatherTemp,
+    weatherTemp: WeatherTemp,
     _isPrecipitating: boolean,
     threatLevel: ThreatLevelType
 ): SimulationResult => {
@@ -40,6 +40,23 @@ export const runSimulation = (
                     sourceUrl: item.sourceUrl,
                     sourceName: item.sourceName,
                     severity: 'critical'
+                });
+            });
+        }
+    }
+
+    // 1b. Chemical Risk (Oil-Based)
+    // "Oil-based products trap pepper spray and tear gas against your skin."
+    if (threatLevel === 'High') {
+        const oilBasedItems = equippedItems.filter(item => item.attributes.isOilBased);
+        if (oilBasedItems.length > 0) {
+            score -= 20;
+            oilBasedItems.forEach(item => {
+                feedback.push({
+                    message: `CHEMICAL TRAP: ${item.name} is oil-based and will trap chemical agents against your skin.`,
+                    sourceUrl: item.sourceUrl,
+                    sourceName: item.sourceName,
+                    severity: 'warning'
                 });
             });
         }
@@ -186,6 +203,96 @@ export const runSimulation = (
                 severity: 'success'
             });
         });
+    }
+
+    // 11. Negative: Open Toed Shoes (Flip Flops)
+    const openToedItems = equippedItems.filter(item => item.attributes.isOpenToed);
+    if (openToedItems.length > 0) {
+        score -= 15;
+        openToedItems.forEach(item => {
+            feedback.push({
+                message: `INJURY RISK: ${item.name} limit mobility and leave feet exposed to glass/chemicals.`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'warning'
+            });
+        });
+    }
+
+    // 12. Hydration Check
+    const hydrationItems = equippedItems.filter(item => item.attributes.providesHydration);
+    if (hydrationItems.length > 0) {
+        score += 10;
+        hydrationItems.forEach(item => {
+            feedback.push({
+                message: `HYDRATED: ${item.name} helps prevent dehydration, which can occur in any weather. (+10 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'success'
+            });
+        });
+    } else {
+        // No hydration
+        score -= 10;
+        feedback.push({
+            message: `DEHYDRATION RISK: Dehydration can occur in any weather. Bring water or electrolytes.`,
+            sourceUrl: 'https://mutualaiddisasterrelief.org/wp-content/uploads/2020/04/kupdf.net_street-medic-handbook.pdf',
+            sourceName: 'mutual-aid-disaster-relief',
+            severity: 'warning'
+        });
+    }
+
+    // 13. Weather Specifics
+    // Heat
+    if (weatherTemp === 'Hot') {
+        // Sun Protection
+        const sunProtectionItems = equippedItems.filter(item => item.attributes.providesSunProtection);
+        if (sunProtectionItems.length > 0) {
+            score += 10;
+            sunProtectionItems.forEach(item => {
+                feedback.push({
+                    message: `SUN PROTECTION: ${item.name} protects against sunburn and heat stress. (+10 PTS)`,
+                    sourceUrl: item.sourceUrl,
+                    sourceName: item.sourceName,
+                    severity: 'success'
+                });
+            });
+        }
+
+        // Heat Exhaustion check (if no hydration, extra penalty)
+        if (hydrationItems.length === 0) {
+            score -= 10; // Additional penalty
+            feedback.push({
+                message: `HEAT EXHAUSTION RISK: Hydration is critical in hot weather.`,
+                sourceUrl: 'https://mutualaiddisasterrelief.org/wp-content/uploads/2020/04/kupdf.net_street-medic-handbook.pdf',
+                sourceName: 'mutual-aid-disaster-relief',
+                severity: 'warning'
+            });
+        }
+    }
+
+    // Cold / Cool
+    if (weatherTemp === 'Cold' || weatherTemp === 'Cool') {
+        const warmthItems = equippedItems.filter(item => item.attributes.providesWarmth);
+        if (warmthItems.length > 0) {
+            score += 10;
+            warmthItems.forEach(item => {
+                feedback.push({
+                    message: `WARMTH: ${item.name} helps prevent hypothermia. (+10 PTS)`,
+                    sourceUrl: item.sourceUrl,
+                    sourceName: item.sourceName,
+                    severity: 'success'
+                });
+            });
+        } else {
+            score -= 15;
+            feedback.push({
+                message: `HYPOTHERMIA RISK: Hypothermia is common even in cool 40-60°F weather. Bring warm layers/chem warmers.`,
+                sourceUrl: 'https://mutualaiddisasterrelief.org/wp-content/uploads/2020/04/kupdf.net_street-medic-handbook.pdf',
+                sourceName: 'mutual-aid-disaster-relief',
+                severity: 'warning'
+            });
+        }
     }
 
     // Clamp score

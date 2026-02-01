@@ -122,6 +122,7 @@ function App() {
 
   // Environmental State
   const [temperature, setTemperature] = useState<TemperatureLevel>('Comfortable');
+  const [precip, setPrecip] = useState<boolean>(false);
   const [threatLevel, setThreatLevel] = useState<ThreatLevelType>('Low');
 
   const sensors = useSensors(
@@ -256,7 +257,8 @@ function App() {
     // Note: simulationEngine types should match these.
     // Assuming simulationEngine exported types act as the source of truth.
     // Need to cast or ensuring types align.
-    const result = runSimulation(equippedSafetyItems, temperature, threatLevel === 'High', threatLevel);
+    // Need to cast or ensuring types align.
+    const result = runSimulation(equippedSafetyItems, temperature, precip, threatLevel);
     setSimulationResult(result);
   };
 
@@ -381,8 +383,8 @@ function App() {
               onSimulate={handleSimulate}
               temp={temperature}
               setTemp={setTemperature}
-              precip={false} // Mapping to Briefing props which might expect boolean? Checking simulationEngine types.
-              setPrecip={() => { }} // Stub if Briefing expects setter. Briefing props need check.
+              precip={precip}
+              setPrecip={setPrecip}
               threat={threatLevel}
               setThreat={setThreatLevel}
             />

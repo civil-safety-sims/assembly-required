@@ -1,4 +1,4 @@
-import { CloudRain, Thermometer, ShieldAlert, PlayCircle, Sun, Cloud, Snowflake } from 'lucide-react';
+import { CloudRain, Thermometer, ShieldAlert, PlayCircle, Sun, Cloud, Snowflake, Wind } from 'lucide-react';
 import type { WeatherTemp, ThreatLevelType } from '../logic/simulationEngine';
 import clsx from 'clsx';
 
@@ -16,6 +16,7 @@ export const Briefing = ({ onSimulate, temp, setTemp, precip, setPrecip, threat,
 
     const tempOptions: { val: WeatherTemp, icon: any, label: string }[] = [
         { val: 'Cold', icon: Snowflake, label: 'Cold' },
+        { val: 'Cool', icon: Wind, label: 'Cool' },
         { val: 'Comfortable', icon: Cloud, label: 'Mild' },
         { val: 'Hot', icon: Sun, label: 'Hot' },
     ];
@@ -41,7 +42,7 @@ export const Briefing = ({ onSimulate, temp, setTemp, precip, setPrecip, threat,
                 </h3>
 
                 {/* Temperature Selector */}
-                <div className="grid grid-cols-3 gap-2 mb-3">
+                <div className="grid grid-cols-4 gap-2 mb-3">
                     {tempOptions.map(opt => (
                         <button
                             key={opt.val}

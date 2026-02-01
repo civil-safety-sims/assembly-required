@@ -11,6 +11,13 @@ export interface SafetyItemAttributes {
     isAnonymous: boolean;
     hasEncryptedComms: boolean;
     providesOfflineNav: boolean;
+    // New attributes from MADR
+    isOilBased: boolean;
+    isOpenToed: boolean;
+    providesHydration: boolean;
+    providesWarmth: boolean;
+    providesEnergy: boolean;
+    providesSunProtection: boolean;
 }
 
 export interface SafetyItem {
@@ -35,6 +42,12 @@ const DEFAULT_ATTRIBUTES: SafetyItemAttributes = {
     isAnonymous: false,
     hasEncryptedComms: false,
     providesOfflineNav: false,
+    isOilBased: false,
+    isOpenToed: false,
+    providesHydration: false,
+    providesWarmth: false,
+    providesEnergy: false,
+    providesSunProtection: false,
 };
 
 export const AVAILABLE_ITEMS: SafetyItem[] = [
@@ -173,6 +186,7 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         attributes: {
             ...DEFAULT_ATTRIBUTES,
             isSterile: true,
+            providesHydration: true,
         },
     },
     {
@@ -225,5 +239,80 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
             isFlammable: true,
         },
         tags: ['signs'],
+    },
+    // MADR New Items
+    {
+        id: 'item-oil-sunscreen',
+        name: 'Oil-Based Sunscreen',
+        icon: 'Sun',
+        slot: 'pockets',
+        sourceUrl: 'https://mutualaiddisasterrelief.org/wp-content/uploads/2020/04/kupdf.net_street-medic-handbook.pdf',
+        sourceName: 'mutual-aid-disaster-relief',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isOilBased: true,
+            providesSunProtection: true,
+        },
+    },
+    {
+        id: 'item-water-sunscreen',
+        name: 'Water-Based Sunscreen',
+        icon: 'Sun',
+        slot: 'pockets',
+        sourceUrl: 'https://mutualaiddisasterrelief.org/wp-content/uploads/2020/04/kupdf.net_street-medic-handbook.pdf',
+        sourceName: 'mutual-aid-disaster-relief',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesSunProtection: true,
+        },
+    },
+    {
+        id: 'item-flip-flops',
+        name: 'Flip Flops',
+        icon: 'Footprints',
+        slot: 'feet',
+        sourceUrl: 'https://mutualaiddisasterrelief.org/wp-content/uploads/2020/04/kupdf.net_street-medic-handbook.pdf',
+        sourceName: 'mutual-aid-disaster-relief',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isOpenToed: true,
+        },
+    },
+    {
+        id: 'item-electrolytes',
+        name: 'Electrolyte Packets',
+        icon: 'Zap',
+        slot: 'pockets',
+        sourceUrl: 'https://mutualaiddisasterrelief.org/wp-content/uploads/2020/04/kupdf.net_street-medic-handbook.pdf',
+        sourceName: 'mutual-aid-disaster-relief',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesHydration: true,
+            providesEnergy: true,
+        },
+    },
+    {
+        id: 'item-hand-warmers',
+        name: 'Hand Warmers',
+        icon: 'ThermometerSun',
+        slot: 'pockets',
+        sourceUrl: 'https://mutualaiddisasterrelief.org/wp-content/uploads/2020/04/kupdf.net_street-medic-handbook.pdf',
+        sourceName: 'mutual-aid-disaster-relief',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesWarmth: true,
+        },
+    },
+    {
+        id: 'item-trail-mix',
+        name: 'Trail Mix',
+        icon: 'Nut',
+        slot: 'pockets',
+        sourceUrl: 'https://mutualaiddisasterrelief.org/wp-content/uploads/2020/04/kupdf.net_street-medic-handbook.pdf',
+        sourceName: 'mutual-aid-disaster-relief',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesEnergy: true,
+        },
     },
 ];

@@ -18,4 +18,4 @@ export interface Slot {
     type: ItemType;
     label: string;
 }
-export type TemperatureLevel = 'Hot' | 'Comfortable' | 'Cold';
+export type TemperatureLevel = 'Hot' | 'Comfortable' | 'Cool' | 'Cold';

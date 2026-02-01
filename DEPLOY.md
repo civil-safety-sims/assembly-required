@@ -36,3 +36,12 @@ Runs the build script and deploys the `dist` folder to Firebase Hosting.
 
 ## Verification
 After deployment, the CLI will output a hosting URL (e.g., `https://assembly-required-woo-v1.web.app`). Visit this URL to verify the changes are live.
+
+## Rule of Done (CRITICAL)
+**A task is ONLY complete when the following steps are performed:**
+1.  **Code Changes** (Tests pass locally)
+2.  **`npm run build`** (Must return exit code 0)
+3.  **`firebase deploy --only hosting`** (Must see "Deploy complete!")
+4.  **Verification** (Check the live URL)
+
+**NEVER** mark a task as "Done" without running these steps. The code on your machine does not exist until it is on the server.
