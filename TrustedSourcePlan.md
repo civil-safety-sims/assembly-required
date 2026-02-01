@@ -80,9 +80,7 @@ export const TRUSTED_SOURCES: TrustedSource[] = [
 
 | Organization | URL | Topics | Priority |
 |--------------|-----|--------|----------|
-| CPJ (Committee to Protect Journalists) | cpj.org/safety-notes/covering-civil-disorder | Press safety, documentation | High |
-| Witness.org | witness.org/resources | Filming police, evidence preservation | High |
-| Street Medic resources | Various | First aid, chemical decon | Medium |
+
 | OSHA | osha.gov | PPE standards (N95, eye pro ratings) | Medium |
 | CDC | cdc.gov | Tear gas medical guidance | Low (overlaps PHR) |
 
