@@ -497,10 +497,6 @@ export const runSimulation = (
     // 24. Professional Media Gear (High Profile)
     const pressItems = equippedItems.filter(item => item.attributes.isPress);
     if (pressItems.length > 0) {
-        // Trade-off: Validates observer status (+), but attracts attention (-)
-        // Net effect: 0 score change, but specific Warning/Info feedback.
-        // Actually, CPJ says it can be dangerous. Let's make it a context-dependent warning?
-        // For simplicity: Warning about targeting.
         pressItems.forEach(item => {
             feedback.push({
                 message: `HIGH VISIBILITY: ${item.name} clearly identifies you as media/observer (+5), but makes you a priority target for police separation (-5).`,
@@ -510,6 +506,35 @@ export const runSimulation = (
             });
         });
     }
+
+    // 25. Identity Exposure (NLG)
+    const identifyingItems = equippedItems.filter(item => item.attributes.isIdentifying);
+    if (identifyingItems.length > 0 && threatLevel === 'High') {
+        score -= 10;
+        identifyingItems.forEach(item => {
+            feedback.push({
+                message: `DATA RISK: Carrying ${item.name} risks confiscation and identification if arrested. (NLG)`,
+                sourceUrl: 'https://www.nlg.org/know-your-rights/',
+                sourceName: 'NLG',
+                severity: 'warning'
+            });
+        });
+    }
+
+    // 26. Legal Safety Net (NLG)
+    const legalContactItems = equippedItems.filter(item => item.attributes.hasLegalContact);
+    if (legalContactItems.length > 0) {
+        score += 10;
+        legalContactItems.forEach(item => {
+            feedback.push({
+                message: `LEGAL SUPPORT: ${item.name} ensures you can call for help if arrested and phone is taken. (+10 PTS)`,
+                sourceUrl: 'https://www.nlg.org/know-your-rights/',
+                sourceName: 'NLG',
+                severity: 'success'
+            });
+        });
+    }
+
 
     // Clamp score
     score = Math.min(100, Math.max(0, score));

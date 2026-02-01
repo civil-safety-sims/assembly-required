@@ -34,6 +34,9 @@ export interface SafetyItemAttributes {
     hasEmergencyContact: boolean;
     isPress: boolean; // Professional visibility
     protectsPrivacy: boolean; // Blurs faces/scrubs metadata
+    // New attributes from NLG
+    isIdentifying: boolean;
+    hasLegalContact: boolean;
 }
 
 export interface SafetyItem {
@@ -77,6 +80,8 @@ const DEFAULT_ATTRIBUTES: SafetyItemAttributes = {
     hasEmergencyContact: false,
     isPress: false,
     protectsPrivacy: false,
+    isIdentifying: false,
+    hasLegalContact: false,
 };
 
 export const AVAILABLE_ITEMS: SafetyItem[] = [
@@ -524,19 +529,7 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         },
         tags: ['tech', 'privacy'],
     },
-    {
-        id: 'item-image-scrubber',
-        name: 'Image Scrubber App',
-        icon: 'EyeOff',
-        slot: 'pockets', // Installed on phone really, but pockets checks out as "equipped"
-        sourceUrl: 'https://witness.org/how-to-film-a-protest/',
-        sourceName: 'WITNESS',
-        attributes: {
-            ...DEFAULT_ATTRIBUTES,
-            protectsPrivacy: true,
-        },
-        tags: ['tech', 'privacy'],
-    },
+
     // WITNESS New Items
     {
         id: 'item-emergency-info',
@@ -548,6 +541,34 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         attributes: {
             ...DEFAULT_ATTRIBUTES,
             hasEmergencyContact: true,
+        },
+        tags: ['legal', 'safety'],
+    },
+    // NLG New Items
+    {
+        id: 'item-wallet',
+        name: 'Wallet with ID',
+        icon: 'Wallet',
+        slot: 'pockets',
+        sourceUrl: 'https://www.nlg.org/know-your-rights/',
+        sourceName: 'NLG',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isIdentifying: true,
+            isDocumentation: false, // Explicitly not documentation
+        },
+        tags: ['legal', 'risk'],
+    },
+    {
+        id: 'item-legal-hotline',
+        name: 'Legal Hotline (Body Written)',
+        icon: 'Edit2', // Marker/Pen
+        slot: 'body',
+        sourceUrl: 'https://www.nlg.org/know-your-rights/',
+        sourceName: 'NLG',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            hasLegalContact: true,
         },
         tags: ['legal', 'safety'],
     },
