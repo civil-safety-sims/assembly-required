@@ -19,7 +19,8 @@ All safety advice in this application is strictly sourced from:
 * **PHR:** Tear Gas & Chemical Irritants
 
 ## 🚀 Deployment
-Hosted on Firebase: [Insert Link Later]
+Hosted on Firebase: [https://assembly-required-woo-v1.web.app](https://assembly-required-woo-v1.web.app)
+See [DEPLOY.md](DEPLOY.md) for deployment instructions.
 
 ## 📄 License
 Code: MIT

@@ -16,7 +16,7 @@ export const Activist = ({ slots, equippedItems, onEdit }: ActivistProps) => {
     const getSlot = (id: string) => slots.find(s => s.id === id);
 
     return (
-        <div className="w-full max-w-md flex flex-col items-center py-4 relative gap-6 my-auto">
+        <div className="w-full max-w-md flex flex-col items-center py-4 pt-40 relative gap-6 my-auto">
 
             {/* Main Paper Doll Area */}
             <div className="relative w-full flex-1 min-h-[400px]">
@@ -32,13 +32,12 @@ export const Activist = ({ slots, equippedItems, onEdit }: ActivistProps) => {
                     const isHand1Sign = hand1Item?.tags?.includes('signs');
                     const isHand2Sign = hand2Item?.tags?.includes('signs');
 
-                    if (isHand1Sign) {
-                        return <SignDisplay item={hand1Item} side="left" />;
-                    }
-                    if (isHand2Sign) {
-                        return <SignDisplay item={hand2Item} side="right" />;
-                    }
-                    return null;
+                    return (
+                        <>
+                            {isHand1Sign && <SignDisplay item={hand1Item} side="left" />}
+                            {isHand2Sign && <SignDisplay item={hand2Item} side="right" />}
+                        </>
+                    );
                 })()}
 
                 <div className="grid grid-cols-6 gap-4 w-full h-full content-center">

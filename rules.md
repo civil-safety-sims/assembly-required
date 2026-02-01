@@ -32,3 +32,7 @@
 * **The Fix:** Cover unique tattoos with bandages or long sleeves.
 * **The Backup:** Write "Legal Aid" number on your arm in Permanent Marker (paper can be confiscated; skin cannot).
 * **Source:** [ACLU Protester Rights](https://www.aclu.org/know-your-rights/protesters-rights)
+
+## 6. Signs & Speech
+* **Fact:** While profanity is legally protected speech (Cohen v. California), police frequently use it as a pretext to arrest protesters for 'Disorderly Conduct' or 'Breach of Peace' to remove them from the scene.
+* **Source:** [ACLU of Illinois (Rights vs. Reality)](https://www.aclu-il.org/en/know-your-rights/know-your-right-protest-chicago)

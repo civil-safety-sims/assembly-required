@@ -189,8 +189,8 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         name: 'Cardboard Sign',
         icon: 'Square',
         slot: 'hands',
-        sourceUrl: 'https://www.amnestyusa.org/pdfs/SafeyDuringProtest_F.pdf', // General toolkit ref
-        sourceName: 'Amnesty International',
+        sourceUrl: 'https://www.aclu.org/know-your-rights/protesters-rights', // General toolkit ref
+        sourceName: 'ACLU',
         attributes: {
             ...DEFAULT_ATTRIBUTES,
             isFlammable: true,
@@ -202,8 +202,8 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         name: 'Foam Core Sign',
         icon: 'Square',
         slot: 'hands',
-        sourceUrl: 'https://www.amnestyusa.org/pdfs/SafeyDuringProtest_F.pdf',
-        sourceName: 'Amnesty International',
+        sourceUrl: 'https://www.aclu.org/know-your-rights/protesters-rights',
+        sourceName: 'ACLU',
         attributes: {
             ...DEFAULT_ATTRIBUTES,
             isFlammable: true, // Highly flammable polystyrene
@@ -215,8 +215,8 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         name: 'Poster Board Sign',
         icon: 'Square',
         slot: 'hands',
-        sourceUrl: 'https://www.amnestyusa.org/pdfs/SafeyDuringProtest_F.pdf',
-        sourceName: 'Amnesty International',
+        sourceUrl: 'https://www.aclu.org/know-your-rights/protesters-rights',
+        sourceName: 'ACLU',
         attributes: {
             ...DEFAULT_ATTRIBUTES,
             isFlammable: true,

@@ -58,8 +58,17 @@ export const SignInputModal = ({ isOpen, onClose, initialText, onSave }: SignInp
 
                         {/* Guidance Alert */}
                         <div className="bg-amber-900/20 border border-amber-700/50 rounded p-3 text-xs text-amber-200/80">
-                            <strong>TIP:</strong> Keep it impactful but strategic. Profanity or aggressive language can sometimes be used by police to justify escalation or arrest (Disorderly Conduct).
-                            <br /><span className="italic opacity-70">- based on protest safety guidelines</span>
+                            <strong>TIP:</strong> Your speech is protected, but the First Amendment does not cover words that 'incite violence' or 'encourage illegal acts.' Police frequently use this distinction to shut down assemblies.
+                            <br />
+                            <span className="italic opacity-70">- based on </span>
+                            <a
+                                href="https://www.aclu.org/know-your-rights/protesters-rights"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="italic text-amber-400 hover:text-amber-300 underline"
+                            >
+                                ACLU
+                            </a>
                         </div>
 
                         <div className="flex gap-3 pt-2">

@@ -35,9 +35,9 @@ export const SignDisplay = ({ item, side }: SignDisplayProps) => {
     // The stick should be to the left of the eyes box on the left, and to the right of the face box on the right"
     // No rotation.
     const positionClasses = side === 'left'
-        ? "top-[-30%] left-[0%] origin-bottom-left" // Hand 1 (Left) - High up, aligned left
+        ? "top-[-30%] left-[2%] origin-bottom-left -rotate-6" // Hand 1 (Left) - High up, aligned left, rotated out
         : side === 'right'
-            ? "top-[-30%] right-[0%] origin-bottom-right" // Hand 2 (Right) - High up, aligned right
+            ? "top-[-30%] right-[2%] origin-bottom-right rotate-6" // Hand 2 (Right) - High up, aligned right, rotated out
             : "top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2"; // Fallback
 
     return (
