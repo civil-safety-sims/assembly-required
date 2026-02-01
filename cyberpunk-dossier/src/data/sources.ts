@@ -79,6 +79,30 @@ export const TRUSTED_SOURCES: TrustedSource[] = [
         url: 'https://library.witness.org/product/filming-protests-demonstrations-usa/',
         topics: ['filming', 'evidence', 'ethics'],
         description: 'Best practices for filming protests safely, ethically, and effectively for evidence.'
+    },
+    {
+        id: 'osha-ppe',
+        name: 'Occupational Safety and Health Administration (OSHA)',
+        shortName: 'OSHA',
+        url: 'https://www.osha.gov/personal-protective-equipment',
+        topics: ['ppe', 'standards', 'masks'],
+        description: 'Official standards for Personal Protective Equipment (PPE) including respiratory protection ratings.'
+    },
+    {
+        id: 'cdc-tear-gas',
+        name: 'Centers for Disease Control and Prevention (CDC)',
+        shortName: 'CDC',
+        url: 'https://emergency.cdc.gov/agent/riotcontrol/factsheet.asp',
+        topics: ['medical', 'tear-gas', 'health'],
+        description: 'Public health guidance on riot control agents and immediate medical response.'
+    },
+    {
+        id: 'mutual-aid-disaster-relief',
+        name: 'Mutual Aid Disaster Relief',
+        shortName: 'MADR',
+        url: 'https://mutualaiddisasterrelief.org/wp-content/uploads/2020/04/kupdf.net_street-medic-handbook.pdf',
+        topics: ['medical', 'first-aid', 'street-medic'],
+        description: 'Street Medic Handbook provided by Mutual Aid Disaster Relief.'
     }
 ];
 
@@ -122,7 +146,7 @@ export const GENERAL_SAFETY_GUIDANCE: SafetyGuidance[] = [
     {
         topic: 'Medical Team Location',
         description: 'Identify where street medics are stationed early on. Know where to go for help.',
-        sources: ['Street Medic Resources']
+        sources: ['MADR']
     },
     {
         topic: 'De-escalation',

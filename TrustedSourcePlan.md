@@ -48,7 +48,10 @@ Severity levels: `critical`, `warning`, `info`, `success`
 
 ---
 
-## Phase 1: Source Registry
+## Phase 1: Source Registry [COMPLETED]
+
+**Status**: Implemented (2026-02-01)
+- Added OSHA and CDC to `src/data/sources.ts`
 
 Create a central registry to track all trusted sources.
 
