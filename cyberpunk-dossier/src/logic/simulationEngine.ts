@@ -21,7 +21,13 @@ export const runSimulation = (
     isPrecipitating: boolean,
     threatLevel: ThreatLevelType
 ): SimulationResult => {
-    let score = 50;
+    // Context-aware base score - safer scenarios start with higher baseline
+    let score = 60; // High threat baseline
+    if (threatLevel === 'Low') {
+        score = 80; // Low threat = inherently safer
+    } else if (threatLevel === 'Medium') {
+        score = 70; // Medium threat = moderate baseline
+    }
     const feedback: FeedbackCard[] = [];
 
     // Helper checks

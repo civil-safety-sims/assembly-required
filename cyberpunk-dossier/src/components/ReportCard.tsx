@@ -22,7 +22,7 @@ export const ReportCard = ({ result, onClose }: ReportCardProps) => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [onClose]);
 
-    const isDanger = result.score < 50;
+    const isDanger = result.score < 40; // More forgiving threshold
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
