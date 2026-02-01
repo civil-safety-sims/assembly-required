@@ -15,7 +15,10 @@ A guide for tracking trusted websites and converting their content into game rul
 | EFF Surveillance Self-Defense | ssd.eff.org/module/attending-protest | Digital security, phones, tracking |
 | Physicians for Human Rights (PHR) | phr.org/our-work/resources/preparing-for-protecting-against-and-treating-tear-gas-and-other-chemical-irritant-exposure-a-protesters-guide/ | Tear gas, chemical exposure |
 | ACLU | aclu.org/know-your-rights/protesters-rights | General rights, signage |
-| CPJ | cpj.org (referenced in README, not yet used in items) | Physical safety |
+| Committee to Protect Journalists (CPJ) | cpj.org (referenced in README, not yet used in items) | Physical safety |
+| Sins Invalid / DREDF | dredf.org/2020/06/16/know-your-rights-protesting-while-disabled/ | Disability rights, mobility aids, medications |
+| NRDC | nrdc.org/stories/how-protest-safely | Health, weather, hydration, sun/cold protection |
+| WITNESS | library.witness.org/product/filming-protests-demonstrations-usa/ | Ethical recording, protecting identities, filming police conduct |
 
 ### Current Item Attribute System (9 attributes)
 
@@ -169,6 +172,9 @@ if (condition) {
 | `isIdentifying` | Contains personal info | NLG | Work ID, wallet with cards |
 | `providesHydration` | Prevents heat-related illness | Multiple | Water, electrolytes |
 | `isDocumentation` | Records evidence | Witness.org | Camera, notebook |
+| `isPress` | Identifies as media (Press Pass) | CPJ (Committee to Protect Journalists) | Press Pass, Large Camera |
+| `isMobilityAid` | Assistive device for mobility | Sins Invalid / DREDF | Wheelchair, Cane, Walker |
+| `requiresMobilityAccess` | User requires accessible routes | Sins Invalid / DREDF | (Player Trait / Context) |
 
 ### Suggested New Rules
 
@@ -180,6 +186,26 @@ if (condition) {
 | Heat Exhaustion | Hot weather | `!providesHydration` | -10 pts | warning |
 | Identity Exposure | High threat | `isIdentifying` | -15 pts | warning |
 | Evidence Preservation | Any | `isDocumentation` | +5 pts | info |
+| Press Visibility | High Police Presence | `isPress` | +10 pts (Documentation) / -10 pts (Targeting) | warning |
+| Mobility Needs | Dispersal Order | `isMobilityAid` | -10 pts (Speed) / +10 pts (Preparedness) | warning |
+### Special Guidance Sections
+
+#### Journalist Identification (Source: CPJ)
+*   **Context**: "Press" identification can provide some legal protection but can also make you a specific target for police attention or harassment.
+*   **Items**: Press Pass (neck/body), Professional Camera (hands).
+*   **Attribute**: `isPress`.
+*   **Rule Logic**:
+    *   IF `isPress` AND `policeBehavior == aggressive`: WARNING "Press credentials may make you a target."
+    *   IF `isPress` AND `policeBehavior == standard`: INFO "Press credentials identify you as an observer."
+
+#### Mobility & Disability (Source: Sins Invalid / DREDF)
+*   **Context**: Protesting with a disability requires specific planning for dispersal, accessible routes, and medication continuity.
+*   **Items**: Mobility Aids (Cane, Walker, Wheelchair), Extra Meds.
+*   **Attribute**: `isMobilityAid`.
+*   **Rule Logic**:
+    *   IF `isMobilityAid` AND `dispersal == fast`: CRITICAL "Mobility aids may impact dispersal speed. Plan exit routes early."
+    *   IF `isMobilityAid`: INFO "Ensure device is labeled with emergency contact info in case of separation."
+
 
 ---
 
