@@ -57,6 +57,7 @@ export const DraggableItem = ({ item, hideLabel = false, onEdit }: DraggableItem
 
     const style = {
         transform: CSS.Translate.toString(transform),
+        touchAction: 'none',
     };
 
     // Determine the icon to render

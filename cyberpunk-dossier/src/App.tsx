@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react';
 import { SupplyCache } from './components/SupplyCache';
 import { Activist } from './components/Activist';
 import { Briefing } from './components/Briefing';
-import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor, type DragEndEvent, rectIntersection } from '@dnd-kit/core';
+import { DndContext, DragOverlay, useSensor, useSensors, MouseSensor, TouchSensor, KeyboardSensor, type DragEndEvent, rectIntersection } from '@dnd-kit/core';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import type { Item, Slot, ItemType, TemperatureLevel } from './types';
 import { DraggableItem } from './components/DraggableItem';
 import { AVAILABLE_ITEMS, type SafetyItem } from './data/gameData';
@@ -126,10 +127,19 @@ function App() {
   const [threatLevel, setThreatLevel] = useState<ThreatLevelType>('Low');
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 10,
       },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
     })
   );
 
