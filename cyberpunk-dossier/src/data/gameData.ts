@@ -18,6 +18,11 @@ export interface SafetyItemAttributes {
     providesWarmth: boolean;
     providesEnergy: boolean;
     providesSunProtection: boolean;
+    // New attributes from NRDC
+    providesWaterResistance: boolean;
+    providesPower: boolean;
+    isUntraceable: boolean;
+    providesResource: boolean;
 }
 
 export interface SafetyItem {
@@ -48,6 +53,10 @@ const DEFAULT_ATTRIBUTES: SafetyItemAttributes = {
     providesWarmth: false,
     providesEnergy: false,
     providesSunProtection: false,
+    providesWaterResistance: false,
+    providesPower: false,
+    isUntraceable: false,
+    providesResource: false,
 };
 
 export const AVAILABLE_ITEMS: SafetyItem[] = [
@@ -314,5 +323,73 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
             ...DEFAULT_ATTRIBUTES,
             providesEnergy: true,
         },
+    },
+    // NRDC New Items
+    {
+        id: 'item-rain-poncho',
+        name: 'Rain Poncho',
+        icon: 'Umbrella',
+        slot: 'body',
+        sourceUrl: 'https://www.nrdc.org/stories/how-protest-safely',
+        sourceName: 'NRDC Health & Safety',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesWaterResistance: true,
+        },
+        tags: ['clothing', 'weather'],
+    },
+    {
+        id: 'item-portable-charger',
+        name: 'Portable Charger',
+        icon: 'BatteryCharging',
+        slot: 'pockets',
+        sourceUrl: 'https://www.nrdc.org/stories/how-protest-safely',
+        sourceName: 'NRDC Health & Safety',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesPower: true,
+        },
+        tags: ['tech', 'utility'],
+    },
+    {
+        id: 'item-prescription-meds',
+        name: 'Meds (Original Bottle)',
+        icon: 'Pill',
+        slot: 'pockets',
+        sourceUrl: 'https://www.nrdc.org/stories/how-protest-safely',
+        sourceName: 'NRDC Health & Safety',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            requiresPrescription: true,
+        },
+        tags: ['medical'],
+    },
+    {
+        id: 'item-cash',
+        name: 'Cash',
+        icon: 'Banknote',
+        slot: 'pockets',
+        sourceUrl: 'https://www.nrdc.org/stories/how-protest-safely',
+        sourceName: 'NRDC Health & Safety',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isUntraceable: true,
+            providesResource: true,
+        },
+        tags: ['utility'],
+    },
+    {
+        id: 'item-winter-coat',
+        name: 'Waterproof Winter Coat',
+        icon: 'Snowflake',
+        slot: 'body',
+        sourceUrl: 'https://www.nrdc.org/stories/how-protest-safely',
+        sourceName: 'NRDC Health & Safety',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesWaterResistance: true,
+            providesWarmth: true,
+        },
+        tags: ['clothing', 'weather'],
     },
 ];

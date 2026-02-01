@@ -18,7 +18,7 @@ export interface SimulationResult {
 export const runSimulation = (
     equippedItems: SafetyItem[],
     weatherTemp: WeatherTemp,
-    _isPrecipitating: boolean,
+    isPrecipitating: boolean,
     threatLevel: ThreatLevelType
 ): SimulationResult => {
     let score = 100;
@@ -293,6 +293,72 @@ export const runSimulation = (
                 severity: 'warning'
             });
         }
+    }
+
+    // 14. Precipitation (Rain)
+    if (isPrecipitating) {
+        const waterResistantItems = equippedItems.filter(item => item.attributes.providesWaterResistance);
+        if (waterResistantItems.length > 0) {
+            score += 10;
+            waterResistantItems.forEach(item => {
+                feedback.push({
+                    message: `DRY & SAFE: ${item.name} prevents hypothermia and keeps you effective in wet weather. (+10 PTS)`,
+                    sourceUrl: item.sourceUrl,
+                    sourceName: item.sourceName,
+                    severity: 'success'
+                });
+            });
+        } else {
+            score -= 20;
+            feedback.push({
+                message: `HYPOTHERMIA RISK: Getting wet drastically increases risk of hypothermia. Bring rain gear.`,
+                sourceUrl: 'https://www.nrdc.org/stories/how-protest-safely',
+                sourceName: 'NRDC Health & Safety',
+                severity: 'warning'
+            });
+        }
+    }
+
+    // 15. Power / Tech resilience
+    const powerItems = equippedItems.filter(item => item.attributes.providesPower);
+    if (powerItems.length > 0) {
+        score += 5;
+        powerItems.forEach(item => {
+            feedback.push({
+                message: `POWER SECURE: ${item.name} ensures you can maintain comms during long events. (+5 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'info'
+            });
+        });
+    }
+
+    // 16. Financial Autonomy (Cash)
+    const resourceItems = equippedItems.filter(item => item.attributes.isUntraceable && item.attributes.providesResource);
+    if (resourceItems.length > 0) {
+        score += 5;
+        resourceItems.forEach(item => {
+            feedback.push({
+                message: `FINANCIAL AUTONOMY: ${item.name} allows transactions when networks are down or cards are tracked. (+5 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'info'
+            });
+        });
+    }
+
+    // 17. Legal Meds
+    const prescriptionItems = equippedItems.filter(item => item.attributes.requiresPrescription);
+    if (prescriptionItems.length > 0) {
+        score += 5; // Small bonus for doing it right
+        prescriptionItems.forEach(item => {
+            feedback.push({
+                message: `LEGAL COMPLIANCE: ${item.name} proves medication is legal and yours. (+5 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'success'
+            });
+        });
     }
 
     // Clamp score
