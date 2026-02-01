@@ -2,7 +2,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import type { Item } from '../types';
 import clsx from 'clsx';
-import { Box, GripVertical, Shirt, Package, Smartphone, Pill, Droplets, Eye, Signpost, Phone, Shield, Map, Square, Edit2, Sun, Footprints, Zap, ThermometerSun, Nut, Umbrella, BatteryCharging, Banknote, Snowflake, Ear, Glasses, BriefcaseMedical, Camera, EyeOff, Wallet, Ghost } from 'lucide-react';
+import { Box, GripVertical, Shirt, Package, Smartphone, Pill, Droplets, Eye, Signpost, Phone, Shield, Map, Square, Edit2, Sun, Footprints, Zap, ThermometerSun, Nut, Umbrella, BatteryCharging, Banknote, Snowflake, Ear, Glasses, BriefcaseMedical, Camera, EyeOff, Wallet, Ghost, Armchair, Accessibility, Move, Activity, Slash } from 'lucide-react';
 
 interface DraggableItemProps {
     item: Item;
@@ -41,6 +41,12 @@ const ICON_MAP: Record<string, React.ReactNode> = {
     'Wallet': <Wallet size={20} />,
     'Mask': <Shield size={20} />, // Fallback for protective masks
     'Ghost': <Ghost size={20} />, // Anonymity
+    'Armchair': <Armchair size={20} />, // Mobility aids
+    'GripVertical': <GripVertical size={20} />, // Walking cane
+    'Accessibility': <Accessibility size={20} />, // Accessibility/mobility aids
+    'Move': <Move size={20} />, // Movement/mobility
+    'Activity': <Activity size={20} />, // Activity/heartbeat
+    'Slash': <Slash size={20} />, // Diagonal line (cane-like)
 };
 
 export const DraggableItem = ({ item, hideLabel = false, onEdit }: DraggableItemProps) => {

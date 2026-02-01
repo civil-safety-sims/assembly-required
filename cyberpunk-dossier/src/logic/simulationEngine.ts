@@ -424,7 +424,21 @@ export const runSimulation = (
         });
     }
 
-    // 21. Assistive Tech Power
+    // 21. Mobility Aid Support
+    const mobilityAidItems = equippedItems.filter(item => item.attributes.isMobilityAid);
+    if (mobilityAidItems.length > 0) {
+        score += 10 * mobilityAidItems.length;
+        mobilityAidItems.forEach(item => {
+            feedback.push({
+                message: `MOBILITY SUPPORT: ${item.name} helps you manage extended protest duration. (+10 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'success'
+            });
+        });
+    }
+
+    // 22. Assistive Tech Power
     const assistivePowerItems = equippedItems.filter(item => item.attributes.supportsAssistiveTech);
     if (assistivePowerItems.length > 0) {
         // Feedback already handled by generic "providesPower", but maybe add specific note?

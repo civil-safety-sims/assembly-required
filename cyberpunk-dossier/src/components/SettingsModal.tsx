@@ -128,7 +128,7 @@ export const SettingsModal = ({ isOpen, onClose, settings, onUpdateSettings }: S
                             <label htmlFor="mobility-aid" className="text-sm text-slate-300 leading-relaxed cursor-pointer select-none">
                                 <span className="font-bold text-slate-200 block">Accessibility: Mobility Assistance</span>
                                 <span className="text-xs text-slate-500 block mt-1">
-                                    "I require assistive aids to move or stay in place for extended periods."
+                                    "                                    "I require assistive aids to move or stay in place for extended periods." (Enables mobility aid items)"
                                 </span>
                             </label>
                         </div>

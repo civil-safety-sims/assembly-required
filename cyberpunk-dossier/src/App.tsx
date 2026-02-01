@@ -166,6 +166,11 @@ function App() {
         return false;
       }
 
+      // Show mobility aids only if user requires them
+      if (!settings.requiresMobilityAid && safetyItem?.attributes.isMobilityAid) {
+        return false;
+      }
+
       return true;
     });
   }, [cacheItems, settings.useMenstrualProducts, settings.requiresCorrectiveLenses, settings.requiresPrescriptionMeds, activeCategory]);

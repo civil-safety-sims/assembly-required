@@ -43,6 +43,8 @@ export interface SafetyItemAttributes {
     isHeavy: boolean; // Steel toe boots
     isImpactRated: boolean; // ANSI Z87+ (Eyes) or ASTM (Feet)
     isSealable: boolean; // Vapor seal
+    // New attributes from DREDF Mobility
+    isMobilityAid: boolean; // Assists with mobility or extended standing/sitting
 }
 
 export interface SafetyItem {
@@ -92,6 +94,7 @@ const DEFAULT_ATTRIBUTES: SafetyItemAttributes = {
     isSealable: false,
     providesMobility: false,
     isHeavy: false,
+    isMobilityAid: false,
 };
 
 export const AVAILABLE_ITEMS: SafetyItem[] = [
@@ -476,6 +479,32 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         tags: ['accessibility', 'sensory'],
     },
     {
+        id: 'item-sun-hat',
+        name: 'Wide-Brimmed Sun Hat',
+        icon: 'Sun',
+        slot: 'head',
+        sourceUrl: 'https://www.amnestyusa.org/pdfs/SafeyDuringProtest_F.pdf',
+        sourceName: 'Amnesty International',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesSunProtection: true,
+        },
+        tags: ['clothing', 'weather', 'sun'],
+    },
+    {
+        id: 'item-winter-hat',
+        name: 'Winter Hat (Beanie)',
+        icon: 'Snowflake',
+        slot: 'head',
+        sourceUrl: 'https://www.amnestyusa.org/pdfs/SafeyDuringProtest_F.pdf',
+        sourceName: 'Amnesty International',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesWarmth: true,
+        },
+        tags: ['clothing', 'weather', 'winter'],
+    },
+    {
         id: 'item-sunglasses',
         name: 'Sunglasses',
         icon: 'Glasses',
@@ -528,6 +557,32 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
             isSterile: true,
         },
         tags: ['medical'],
+    },
+    {
+        id: 'item-folding-stool',
+        name: 'Folding Stool',
+        icon: 'Armchair',
+        slot: 'pockets',
+        sourceUrl: 'https://dredf.org/know-your-rights-for-disabled-protestors-guide/',
+        sourceName: 'DREDF',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isMobilityAid: true,
+        },
+        tags: ['accessibility', 'mobility'],
+    },
+    {
+        id: 'item-walking-cane',
+        name: 'Walking Cane',
+        icon: 'Slash',
+        slot: 'hands',
+        sourceUrl: 'https://dredf.org/know-your-rights-for-disabled-protestors-guide/',
+        sourceName: 'DREDF',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isMobilityAid: true,
+        },
+        tags: ['accessibility', 'mobility'],
     },
     {
         id: 'item-image-scrubber',
