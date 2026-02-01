@@ -8,9 +8,10 @@ interface DroppableSlotProps {
     slot: Slot;
     item: Item | null;
     className?: string;
+    onEdit?: (item: Item) => void;
 }
 
-export const DroppableSlot = ({ slot, item, className }: DroppableSlotProps) => {
+export const DroppableSlot = ({ slot, item, className, onEdit }: DroppableSlotProps) => {
     const { isOver, setNodeRef } = useDroppable({
         id: slot.id,
         data: { slot },
@@ -37,7 +38,7 @@ export const DroppableSlot = ({ slot, item, className }: DroppableSlotProps) => 
             )}>
                 {item ? (
                     <div className="w-full h-full p-1">
-                        <DraggableItem item={item} />
+                        <DraggableItem item={item} onEdit={onEdit} />
                     </div>
                 ) : (
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20 text-slate-500">

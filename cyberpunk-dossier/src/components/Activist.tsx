@@ -1,15 +1,17 @@
 import type { Slot, Item } from '../types';
 import { DroppableSlot } from './DroppableSlot';
+import { SignDisplay } from './SignDisplay';
 import { User } from 'lucide-react';
 
 interface ActivistProps {
     slots: Slot[];
     equippedItems: Record<string, Item | null>;
+    onEdit?: (item: Item) => void;
 }
 
 const STORAGE_SLOTS = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => `slot-storage-${i}`);
 
-export const Activist = ({ slots, equippedItems }: ActivistProps) => {
+export const Activist = ({ slots, equippedItems, onEdit }: ActivistProps) => {
     // Helper to find slot by id
     const getSlot = (id: string) => slots.find(s => s.id === id);
 
@@ -23,6 +25,22 @@ export const Activist = ({ slots, equippedItems }: ActivistProps) => {
                     <User size={300} />
                 </div>
 
+                {/* Sign Display Overlay (if equipped in hands) */}
+                {(() => {
+                    const hand1Item = equippedItems['slot-hand-1'];
+                    const hand2Item = equippedItems['slot-hand-2'];
+                    const isHand1Sign = hand1Item?.tags?.includes('signs');
+                    const isHand2Sign = hand2Item?.tags?.includes('signs');
+
+                    if (isHand1Sign) {
+                        return <SignDisplay item={hand1Item} side="left" />;
+                    }
+                    if (isHand2Sign) {
+                        return <SignDisplay item={hand2Item} side="right" />;
+                    }
+                    return null;
+                })()}
+
                 <div className="grid grid-cols-6 gap-4 w-full h-full content-center">
                     {/* Row 1: Head */}
                     <div className="col-span-6 flex justify-center">
@@ -31,6 +49,7 @@ export const Activist = ({ slots, equippedItems }: ActivistProps) => {
                                 <DroppableSlot
                                     slot={getSlot('slot-head')!}
                                     item={equippedItems['slot-head']}
+                                    onEdit={onEdit}
                                 />
                             )}
                         </div>
@@ -43,6 +62,7 @@ export const Activist = ({ slots, equippedItems }: ActivistProps) => {
                                 <DroppableSlot
                                     slot={getSlot('slot-eyes')!}
                                     item={equippedItems['slot-eyes']}
+                                    onEdit={onEdit}
                                 />
                             )}
                         </div>
@@ -51,6 +71,7 @@ export const Activist = ({ slots, equippedItems }: ActivistProps) => {
                                 <DroppableSlot
                                     slot={getSlot('slot-face')!}
                                     item={equippedItems['slot-face']}
+                                    onEdit={onEdit}
                                 />
                             )}
                         </div>
@@ -62,6 +83,7 @@ export const Activist = ({ slots, equippedItems }: ActivistProps) => {
                             <DroppableSlot
                                 slot={getSlot('slot-hand-1')!}
                                 item={equippedItems['slot-hand-1']}
+                                onEdit={onEdit}
                             />
                         )}
                     </div>
@@ -70,6 +92,7 @@ export const Activist = ({ slots, equippedItems }: ActivistProps) => {
                             <DroppableSlot
                                 slot={getSlot('slot-body')!}
                                 item={equippedItems['slot-body']}
+                                onEdit={onEdit}
                             />
                         )}
                     </div>
@@ -78,6 +101,7 @@ export const Activist = ({ slots, equippedItems }: ActivistProps) => {
                             <DroppableSlot
                                 slot={getSlot('slot-hand-2')!}
                                 item={equippedItems['slot-hand-2']}
+                                onEdit={onEdit}
                             />
                         )}
                     </div>
@@ -106,6 +130,7 @@ export const Activist = ({ slots, equippedItems }: ActivistProps) => {
                                 <DroppableSlot
                                     slot={getSlot(id)!}
                                     item={equippedItems[id]}
+                                    onEdit={onEdit}
                                 />
                             )}
                         </div>

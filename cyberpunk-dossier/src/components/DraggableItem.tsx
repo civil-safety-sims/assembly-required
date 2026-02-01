@@ -2,11 +2,12 @@ import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import type { Item } from '../types';
 import clsx from 'clsx';
-import { Box, GripVertical, Shirt, Package, Smartphone, Pill, Droplets, Eye, Signpost, Phone, Shield, Map, Square } from 'lucide-react';
+import { Box, GripVertical, Shirt, Package, Smartphone, Pill, Droplets, Eye, Signpost, Phone, Shield, Map, Square, Edit2 } from 'lucide-react';
 
 interface DraggableItemProps {
     item: Item;
     hideLabel?: boolean;
+    onEdit?: (item: Item) => void;
 }
 
 const ICON_MAP: Record<string, React.ReactNode> = {
@@ -21,9 +22,10 @@ const ICON_MAP: Record<string, React.ReactNode> = {
     'Shield': <Shield size={20} />,
     'Map': <Map size={20} />,
     'Square': <Square size={20} />,
+    'Edit2': <Edit2 size={16} />,
 };
 
-export const DraggableItem = ({ item, hideLabel = false }: DraggableItemProps) => {
+export const DraggableItem = ({ item, hideLabel = false, onEdit }: DraggableItemProps) => {
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: item.id,
         data: { item },
@@ -53,7 +55,9 @@ export const DraggableItem = ({ item, hideLabel = false }: DraggableItemProps) =
                 "relative group flex items-center gap-2 p-2 bg-slate-800 border cursor-grab active:cursor-grabbing transition-all select-none hover:bg-slate-700",
                 isDragging ? "opacity-50 z-50 ring-2 ring-cyan-500 shadow-lg" : "opacity-100",
                 item.rarity === 'legendary' ? 'border-amber-500/50 hover:border-amber-400' :
-                    item.rarity === 'rare' ? 'border-cyan-500/50 hover:border-cyan-400' : 'border-slate-600 hover:border-slate-500'
+                    item.rarity === 'rare' ? 'border-cyan-500/50 hover:border-cyan-400' :
+                        item.tags?.includes('signs') ? 'border-yellow-500/30 hover:border-yellow-500/50' : // Highlight signs
+                            'border-slate-600 hover:border-slate-500'
             )}
         >
             <div className="text-slate-500">
@@ -61,7 +65,9 @@ export const DraggableItem = ({ item, hideLabel = false }: DraggableItemProps) =
             </div>
             <div className={clsx("p-2 rounded bg-slate-900 shrink-0",
                 item.rarity === 'legendary' ? 'text-amber-500' :
-                    item.rarity === 'rare' ? 'text-cyan-500' : 'text-slate-400'
+                    item.rarity === 'rare' ? 'text-cyan-500' :
+                        item.tags?.includes('signs') ? 'text-yellow-500' : // Highlight signs icon
+                            'text-slate-400'
             )}>
                 {renderIcon()}
             </div>
@@ -72,8 +78,30 @@ export const DraggableItem = ({ item, hideLabel = false }: DraggableItemProps) =
                     )}>
                         {item.name}
                     </div>
-                    <div className="text-xs text-slate-500 uppercase leading-tight mt-0.5">{item.type}</div>
+                    <div className="text-xs text-slate-500 uppercase leading-tight mt-0.5 flex items-center gap-1">
+                        {item.type}
+                        {item.customText && (
+                            <span className="inline-block px-1 py-0.5 bg-yellow-500/20 text-yellow-200 rounded text-[10px] ml-1 truncate max-w-[80px]">
+                                "{item.customText}"
+                            </span>
+                        )}
+                    </div>
                 </div>
+            )}
+
+            {/* Edit Button for Signs */}
+            {onEdit && item.tags?.includes('signs') && !isDragging && (
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation(); // Prevent drag start
+                        onEdit(item);
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
+                    className="p-1.5 rounded hover:bg-slate-600 text-slate-400 hover:text-cyan-400 transition-colors"
+                    title="Edit Sign Text"
+                >
+                    <Edit2 size={14} />
+                </button>
             )}
 
             {/* Decorative corner */}

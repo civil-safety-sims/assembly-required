@@ -10,6 +10,7 @@ import { runSimulation, type SimulationResult, type ThreatLevelType } from './lo
 import { ReportCard } from './components/ReportCard';
 import { Settings } from 'lucide-react';
 import { SettingsModal } from './components/SettingsModal';
+import { SignInputModal } from './components/SignInputModal';
 
 // Convert AVAILABLE_ITEMS to Item[] compatible format for the UI
 // SafetyItem uses 'slot', Item uses 'type'. We map slot -> type.
@@ -73,6 +74,41 @@ function App() {
   const [equippedItems, setEquippedItems] = useState<Record<string, Item | null>>(INITIAL_EQUIPPED);
   const [activeItem, setActiveItem] = useState<Item | null>(null);
   const [simulationResult, setSimulationResult] = useState<SimulationResult | null>(null);
+
+  // Sign Editing State
+  const [editingItem, setEditingItem] = useState<Item | null>(null);
+
+  const handleEditSign = (item: Item) => {
+    setEditingItem(item);
+  };
+
+  const handleSaveSign = (text: string) => {
+    if (!editingItem) return;
+
+    // Helper to update item in a list
+    const updateItemInList = (list: Item[]) =>
+      list.map(i => i.id === editingItem.id ? { ...i, customText: text } : i);
+
+    // Helper to update item in record
+    const updateItemInRecord = (record: Record<string, Item | null>) => {
+      const newRecord = { ...record };
+      Object.keys(newRecord).forEach(key => {
+        const item = newRecord[key];
+        if (item && item.id === editingItem.id) {
+          newRecord[key] = { ...item, customText: text };
+        }
+      });
+      return newRecord;
+    };
+
+    // Update in cache
+    setCacheItems(prev => updateItemInList(prev));
+
+    // Update in equipped
+    setEquippedItems(prev => updateItemInRecord(prev));
+
+    setEditingItem(null);
+  };
 
   // User Settings State
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -299,7 +335,7 @@ function App() {
               </div>
             </header>
             <div className="flex-1 p-4 overflow-y-auto md:overflow-y-auto overflow-x-auto custom-scrollbar bg-slate-950/30">
-              <SupplyCache items={filteredItems} />
+              <SupplyCache items={filteredItems} onEdit={handleEditSign} />
             </div>
           </section>
 
@@ -317,7 +353,7 @@ function App() {
               <div className="absolute bottom-2 right-2 w-4 h-[1px] bg-cyan-500/50"></div>
               <div className="absolute bottom-2 right-2 h-4 w-[1px] bg-cyan-500/50"></div>
 
-              <Activist slots={SLOTS} equippedItems={equippedItems} />
+              <Activist slots={SLOTS} equippedItems={equippedItems} onEdit={handleEditSign} />
             </div>
           </section>
 
@@ -338,6 +374,17 @@ function App() {
         <DragOverlay>
           {activeItem ? <DraggableItem item={activeItem} hideLabel /> : null}
         </DragOverlay>
+
+        {/* Sign Edit Modal */}
+        {editingItem && (
+          <SignInputModal
+            isOpen={!!editingItem}
+            onClose={() => setEditingItem(null)}
+            initialText={editingItem.customText || ''}
+            onSave={handleSaveSign}
+          />
+        )}
+
       </div>
     </DndContext>
   );

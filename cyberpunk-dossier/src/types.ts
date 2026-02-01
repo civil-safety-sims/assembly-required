@@ -10,6 +10,7 @@ export interface Item {
     description?: string;
     rarity?: 'common' | 'rare' | 'legendary';
     tags?: string[];
+    customText?: string;
 }
 
 export interface Slot {

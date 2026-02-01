@@ -197,4 +197,30 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         },
         tags: ['signs'],
     },
+    {
+        id: 'item-foam-core-sign',
+        name: 'Foam Core Sign',
+        icon: 'Square',
+        slot: 'hands',
+        sourceUrl: 'https://www.amnestyusa.org/pdfs/SafeyDuringProtest_F.pdf',
+        sourceName: 'Amnesty International',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isFlammable: true, // Highly flammable polystyrene
+        },
+        tags: ['signs'],
+    },
+    {
+        id: 'item-poster-board-sign',
+        name: 'Poster Board Sign',
+        icon: 'Square',
+        slot: 'hands',
+        sourceUrl: 'https://www.amnestyusa.org/pdfs/SafeyDuringProtest_F.pdf',
+        sourceName: 'Amnesty International',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isFlammable: true,
+        },
+        tags: ['signs'],
+    },
 ];
