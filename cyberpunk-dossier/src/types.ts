@@ -9,6 +9,7 @@ export interface Item {
     icon?: ReactNode | string; // Using Lucide component directly or a string identifier
     description?: string;
     rarity?: 'common' | 'rare' | 'legendary';
+    tags?: string[];
 }
 
 export interface Slot {
@@ -16,3 +17,4 @@ export interface Slot {
     type: ItemType;
     label: string;
 }
+export type TemperatureLevel = 'Hot' | 'Comfortable' | 'Cold';

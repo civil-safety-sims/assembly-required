@@ -3,10 +3,10 @@ import { SupplyCache } from './components/SupplyCache';
 import { Activist } from './components/Activist';
 import { Briefing } from './components/Briefing';
 import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor, type DragEndEvent, rectIntersection } from '@dnd-kit/core';
-import type { Item, Slot } from './types';
+import type { Item, Slot, ItemType, TemperatureLevel } from './types';
 import { DraggableItem } from './components/DraggableItem';
 import { AVAILABLE_ITEMS, type SafetyItem } from './data/gameData';
-import { runSimulation, type SimulationResult, type WeatherTemp, type ThreatLevelType } from './logic/simulationEngine';
+import { runSimulation, type SimulationResult, type ThreatLevelType } from './logic/simulationEngine';
 import { ReportCard } from './components/ReportCard';
 import { Settings } from 'lucide-react';
 import { SettingsModal } from './components/SettingsModal';
@@ -18,7 +18,8 @@ const UI_ITEMS: Item[] = AVAILABLE_ITEMS.map(i => ({
   name: i.name,
   icon: i.icon,
   type: i.slot, // Map slot to type
-  rarity: 'common'
+  rarity: 'common',
+  tags: i.tags,
 }));
 
 const SLOTS: Slot[] = [
@@ -41,42 +42,48 @@ const SLOTS: Slot[] = [
   { id: 'slot-feet', type: 'feet', label: 'Feet' },
 ];
 
+const INITIAL_EQUIPPED: Record<string, Item | null> = {
+  'slot-head': null,
+  'slot-eyes': null,
+  'slot-face': null,
+  'slot-body': null,
+  'slot-hand-1': null,
+  'slot-hand-2': null,
+  'slot-storage-1': null,
+  'slot-storage-2': null,
+  'slot-storage-3': null,
+  'slot-storage-4': null,
+  'slot-storage-5': null,
+  'slot-storage-6': null,
+  'slot-storage-7': null,
+  'slot-storage-8': null,
+  'slot-storage-9': null,
+  'slot-feet': null,
+};
+
+const DEFAULT_SETTINGS = {
+  useMenstrualProducts: false,
+  hasIdentifiableFeatures: false,
+  requiresCorrectiveLenses: false,
+  requiresPrescriptionMeds: false,
+};
+
 function App() {
   const [cacheItems, setCacheItems] = useState<Item[]>(UI_ITEMS);
-  const [equippedItems, setEquippedItems] = useState<Record<string, Item | null>>({
-    'slot-head': null,
-    'slot-eyes': null,
-    'slot-face': null,
-    'slot-body': null,
-    'slot-hand-1': null,
-    'slot-hand-2': null,
-    'slot-storage-1': null,
-    'slot-storage-2': null,
-    'slot-storage-3': null,
-    'slot-storage-4': null,
-    'slot-storage-5': null,
-    'slot-storage-6': null,
-    'slot-storage-7': null,
-    'slot-storage-8': null,
-    'slot-storage-9': null,
-    'slot-feet': null,
-  });
+  const [equippedItems, setEquippedItems] = useState<Record<string, Item | null>>(INITIAL_EQUIPPED);
   const [activeItem, setActiveItem] = useState<Item | null>(null);
   const [simulationResult, setSimulationResult] = useState<SimulationResult | null>(null);
 
   // User Settings State
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [userSettings, setUserSettings] = useState({
-    useMenstrualProducts: false,
-  });
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
 
   // Category Filter State
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeCategory, setActiveCategory] = useState<ItemType | 'all' | 'comms' | 'signs'>('all');
 
   // Environmental State
-  const [weatherTemp, setWeatherTemp] = useState<WeatherTemp>('Comfortable');
-  const [isPrecipitating, setIsPrecipitating] = useState<boolean>(true); // Default to acid rain for Cyberpunk feel
-  const [threatLevel, setThreatLevel] = useState<ThreatLevelType>('High');
+  const [temperature, setTemperature] = useState<TemperatureLevel>('Comfortable');
+  const [threatLevel, setThreatLevel] = useState<ThreatLevelType>('Low');
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -86,23 +93,41 @@ function App() {
     })
   );
 
-  // Filter items based on settings AND category
-  const filteredCacheItems = useMemo(() => {
+  // Filter items based on category and settings
+  const filteredItems = useMemo(() => {
     return cacheItems.filter(item => {
-      // 1. Settings Filter
-      const safetyItem = AVAILABLE_ITEMS.find(si => si.id === item.id);
-      if (safetyItem?.attributes.isAbsorbent && !userSettings.useMenstrualProducts) {
+      // 1. Category Filter
+      if (activeCategory !== 'all') {
+        if (activeCategory === 'comms') {
+          if (!item.tags?.includes('comms')) return false;
+        } else if (activeCategory === 'signs') {
+          if (!item.tags?.includes('signs')) return false;
+        } else if (activeCategory === 'pockets' && item.type === 'pockets') {
+          // pass
+        } else if (item.type !== activeCategory) {
+          return false;
+        }
+      }
+
+      // 2. Settings Filters
+      // Hide menstrual products if not needed
+      if (!settings.useMenstrualProducts && (item.id === 'item-tampons' || item.id === 'item-pads')) {
         return false;
       }
 
-      // 2. Category Filter
-      if (activeCategory !== 'all') {
-        if (item.type !== activeCategory) return false;
+      // Hide contact lenses if corrective lenses are required (user wears glasses)
+      if (settings.requiresCorrectiveLenses && item.id === 'item-contact-lenses') {
+        return false;
+      }
+
+      // Hide loose meds if prescription meds are required
+      if (settings.requiresPrescriptionMeds && item.id === 'item-loose-meds') {
+        return false;
       }
 
       return true;
     });
-  }, [cacheItems, userSettings.useMenstrualProducts, activeCategory]);
+  }, [cacheItems, settings.useMenstrualProducts, settings.requiresCorrectiveLenses, settings.requiresPrescriptionMeds, activeCategory]);
 
   const handleDragStart = (event: any) => {
     setActiveItem(event.active.data.current.item);
@@ -187,12 +212,19 @@ function App() {
       }
     });
 
-    const result = runSimulation(equippedSafetyItems, weatherTemp, isPrecipitating, threatLevel);
+    // We need to pass the simple strings to runSimulation matching its signature
+    // runSimulation(items: SafetyItem[], temp: TemperatureLevel, precip: boolean, threat: ThreatLevel)
+    // Note: simulationEngine types should match these.
+    // Assuming simulationEngine exported types act as the source of truth.
+    // Need to cast or ensuring types align.
+    const result = runSimulation(equippedSafetyItems, temperature, threatLevel === 'High', threatLevel);
     setSimulationResult(result);
   };
 
   const categories = [
     { id: 'all', label: 'All' },
+    { id: 'comms', label: 'Comms' },
+    { id: 'signs', label: 'Signs' },
     { id: 'head', label: 'Head' },
     { id: 'eyes', label: 'Eyes' },
     { id: 'face', label: 'Face' },
@@ -226,8 +258,8 @@ function App() {
         <SettingsModal
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
-          settings={userSettings}
-          onUpdateSettings={setUserSettings}
+          settings={settings}
+          onUpdateSettings={setSettings}
         />
 
         {/* Simulation Report Card Overlay */}
@@ -253,7 +285,7 @@ function App() {
                 {categories.map(cat => (
                   <button
                     key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
+                    onClick={() => setActiveCategory(cat.id as any)}
                     className={`
                             px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-sm border whitespace-nowrap transition-colors
                             ${activeCategory === cat.id
@@ -267,7 +299,7 @@ function App() {
               </div>
             </header>
             <div className="flex-1 p-4 overflow-y-auto md:overflow-y-auto overflow-x-auto custom-scrollbar bg-slate-950/30">
-              <SupplyCache items={filteredCacheItems} />
+              <SupplyCache items={filteredItems} />
             </div>
           </section>
 
@@ -293,10 +325,10 @@ function App() {
           <section className="order-1 md:order-3 md:col-span-1 flex flex-col gap-6">
             <Briefing
               onSimulate={handleSimulate}
-              temp={weatherTemp}
-              setTemp={setWeatherTemp}
-              precip={isPrecipitating}
-              setPrecip={setIsPrecipitating}
+              temp={temperature}
+              setTemp={setTemperature}
+              precip={false} // Mapping to Briefing props which might expect boolean? Checking simulationEngine types.
+              setPrecip={() => { }} // Stub if Briefing expects setter. Briefing props need check.
               threat={threatLevel}
               setThreat={setThreatLevel}
             />

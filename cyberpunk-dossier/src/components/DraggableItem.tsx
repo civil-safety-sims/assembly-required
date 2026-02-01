@@ -2,7 +2,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import type { Item } from '../types';
 import clsx from 'clsx';
-import { Box, GripVertical, Shirt, Package, Smartphone, Pill, Droplets } from 'lucide-react';
+import { Box, GripVertical, Shirt, Package, Smartphone, Pill, Droplets, Eye, Signpost, Phone, Shield, Map, Square } from 'lucide-react';
 
 interface DraggableItemProps {
     item: Item;
@@ -15,6 +15,12 @@ const ICON_MAP: Record<string, React.ReactNode> = {
     'Smartphone': <Smartphone size={20} />,
     'Pill': <Pill size={20} />,
     'Droplets': <Droplets size={20} />,
+    'Eye': <Eye size={20} />,
+    'Signpost': <Signpost size={20} />,
+    'Phone': <Phone size={20} />,
+    'Shield': <Shield size={20} />,
+    'Map': <Map size={20} />,
+    'Square': <Square size={20} />,
 };
 
 export const DraggableItem = ({ item, hideLabel = false }: DraggableItemProps) => {

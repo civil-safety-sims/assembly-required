@@ -128,15 +128,49 @@ export const runSimulation = (
     if (heatResistantItems.length > 0) {
         score += 10;
         heatResistantItems.forEach(() => {
-            // Only add feedback if not already added by the Fire Risk block check to avoid duplicates?
-            // Actually, the previous Fire Risk block added success feedback ONLY if no flammable items were present.
-            // Let's refine the Fire Risk block to handle the negative, and THIS block to handle positive independently.
-            // But valid feedback shouldn't spam.
-            // Let's rely on the previous block for the feedback message, but add the score here.
-            // Wait, the previous block only gave feedback if threatLevel === 'High'.
-            // We want points regardless? Or only if useful? 
-            // "Positive items (water bottle) add feedback but don't reward the player."
-            // Let's just ensure points are added.
+            // Feedback logic here is minimal as the primary goal is score adjustment.
+        });
+    }
+
+    // 7. Positive: Anonymity (Burner Phone)
+    const anonymousItems = equippedItems.filter(item => item.attributes.isAnonymous);
+    if (anonymousItems.length > 0) {
+        score += 10;
+        anonymousItems.forEach(item => {
+            feedback.push({
+                message: `ANONYMITY PRESERVED: ${item.name} protects your identity by decoupling your comms from your personal ID. (+10 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'success'
+            });
+        });
+    }
+
+    // 8. Positive: Encrypted Comms (Signal App)
+    const encryptedItems = equippedItems.filter(item => item.attributes.hasEncryptedComms);
+    if (encryptedItems.length > 0) {
+        score += 10;
+        encryptedItems.forEach(item => {
+            feedback.push({
+                message: `SECURE COMMS: ${item.name} uses end-to-end encryption to prevent interception. (+10 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'success'
+            });
+        });
+    }
+
+    // 9. Positive: Signal Blocking (Faraday Bag)
+    const signalBlockingItems = equippedItems.filter(item => item.attributes.isSignalBlocking);
+    if (signalBlockingItems.length > 0) {
+        score += 15;
+        signalBlockingItems.forEach(item => {
+            feedback.push({
+                message: `TRACKING BLOCKED: ${item.name} prevents Stingrays (IMSI Catchers) from tracking your location. (+15 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'success'
+            });
         });
     }
 

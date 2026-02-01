@@ -7,6 +7,9 @@ export interface SafetyItemAttributes {
     isSterile: boolean;
     requiresPrescription: boolean;
     isLoosePills: boolean;
+    isSignalBlocking: boolean;
+    isAnonymous: boolean;
+    hasEncryptedComms: boolean;
 }
 
 export interface SafetyItem {
@@ -17,6 +20,7 @@ export interface SafetyItem {
     sourceUrl: string;
     sourceName: string;
     attributes: SafetyItemAttributes;
+    tags?: string[];
 }
 
 const DEFAULT_ATTRIBUTES: SafetyItemAttributes = {
@@ -26,6 +30,9 @@ const DEFAULT_ATTRIBUTES: SafetyItemAttributes = {
     isSterile: false,
     requiresPrescription: false,
     isLoosePills: false,
+    isSignalBlocking: false,
+    isAnonymous: false,
+    hasEncryptedComms: false,
 };
 
 export const AVAILABLE_ITEMS: SafetyItem[] = [
@@ -88,6 +95,58 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
             ...DEFAULT_ATTRIBUTES,
             isBiometric: true,
         },
+        tags: ['comms'],
+    },
+    {
+        id: 'item-smartphone-secure',
+        name: 'Smart Phone (Signal + No Track)',
+        icon: 'Smartphone',
+        slot: 'hands',
+        sourceUrl: 'https://ssd.eff.org/module/attending-protest',
+        sourceName: 'EFF Surveillance Self-Defense',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            hasEncryptedComms: true,
+        },
+        tags: ['comms'],
+    },
+    {
+        id: 'item-burner-phone',
+        name: 'Prepaid Burner Phone',
+        icon: 'Phone',
+        slot: 'hands',
+        sourceUrl: 'https://ssd.eff.org/module/attending-protest#buy-a-prepaid-disposable-phone',
+        sourceName: 'EFF Surveillance Self-Defense',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isAnonymous: true,
+        },
+        tags: ['comms'],
+    },
+    {
+        id: 'item-faraday-bag',
+        name: 'Faraday Bag',
+        icon: 'Shield',
+        slot: 'pockets',
+        sourceUrl: 'https://ssd.eff.org/module/attending-protest#prevent-cell-site-simulators-from-tracking-your-phone',
+        sourceName: 'EFF Surveillance Self-Defense',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isSignalBlocking: true,
+        },
+        tags: ['comms', 'security'],
+    },
+    {
+        id: 'item-paper-map',
+        name: 'Offline Area Map',
+        icon: 'Map',
+        slot: 'pockets',
+        sourceUrl: 'https://ssd.eff.org/module/attending-protest#things-to-be-aware-of-while-traveling-to-and-from-the-protest',
+        sourceName: 'EFF Surveillance Self-Defense',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+        },
+        tags: ['nav'],
     },
     {
         id: 'item-loose-meds',
@@ -112,5 +171,30 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
             ...DEFAULT_ATTRIBUTES,
             isSterile: true,
         },
+    },
+    {
+        id: 'item-contact-lenses',
+        name: 'Contact Lenses',
+        icon: 'Eye',
+        slot: 'eyes',
+        sourceUrl: 'https://www.amnestyusa.org/pdfs/SafeyDuringProtest_F.pdf',
+        sourceName: 'Amnesty International Safety Toolkit',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isSterile: false, // Traps chemicals
+        },
+    },
+    {
+        id: 'item-cardboard-sign',
+        name: 'Cardboard Sign',
+        icon: 'Square',
+        slot: 'hands',
+        sourceUrl: 'https://www.amnestyusa.org/pdfs/SafeyDuringProtest_F.pdf', // General toolkit ref
+        sourceName: 'Amnesty International',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isFlammable: true,
+        },
+        tags: ['signs'],
     },
 ];
