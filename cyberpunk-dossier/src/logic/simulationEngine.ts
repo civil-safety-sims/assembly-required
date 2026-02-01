@@ -174,6 +174,20 @@ export const runSimulation = (
         });
     }
 
+    // 10. Positive: Offline Navigation (Paper Map)
+    const offlineNavItems = equippedItems.filter(item => item.attributes.providesOfflineNav);
+    if (offlineNavItems.length > 0) {
+        score += 10;
+        offlineNavItems.forEach(item => {
+            feedback.push({
+                message: `DIGITAL RESILIENCE: ${item.name} ensures you can navigate if cell towers go down or phones are confiscated. (+10 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'success'
+            });
+        });
+    }
+
     // Clamp score
     score = Math.min(100, Math.max(0, score));
 

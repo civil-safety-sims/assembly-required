@@ -67,6 +67,7 @@ const DEFAULT_SETTINGS = {
   hasIdentifiableFeatures: false,
   requiresCorrectiveLenses: false,
   requiresPrescriptionMeds: false,
+  requiresMobilityAid: false,
 };
 
 function App() {

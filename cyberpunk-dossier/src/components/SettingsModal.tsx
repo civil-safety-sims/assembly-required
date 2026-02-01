@@ -5,6 +5,7 @@ interface UserSettings {
     hasIdentifiableFeatures: boolean;
     requiresCorrectiveLenses: boolean;
     requiresPrescriptionMeds: boolean;
+    requiresMobilityAid: boolean;
 }
 
 interface SettingsModalProps {
@@ -109,6 +110,25 @@ export const SettingsModal = ({ isOpen, onClose, settings, onUpdateSettings }: S
                                 <span className="font-bold text-slate-200 block">Medical: Prescription Needs</span>
                                 <span className="text-xs text-slate-500 block mt-1">
                                     "I need prescription medications to stay healthy." (Disables Loose Meds option)
+                                </span>
+                            </label>
+                        </div>
+
+                        <div className="flex items-start gap-3 group px-2 py-1 rounded hover:bg-slate-800/50 transition-colors">
+                            <input
+                                type="checkbox"
+                                id="mobility-aid"
+                                checked={settings.requiresMobilityAid}
+                                onChange={(e) => onUpdateSettings({
+                                    ...settings,
+                                    requiresMobilityAid: e.target.checked
+                                })}
+                                className="mt-1 w-4 h-4 rounded border-slate-600 bg-slate-800 text-cyan-500 focus:ring-offset-slate-900 focus:ring-cyan-500/50"
+                            />
+                            <label htmlFor="mobility-aid" className="text-sm text-slate-300 leading-relaxed cursor-pointer select-none">
+                                <span className="font-bold text-slate-200 block">Accessibility: Mobility Assistance</span>
+                                <span className="text-xs text-slate-500 block mt-1">
+                                    "I require assistive aids to move or stay in place for extended periods."
                                 </span>
                             </label>
                         </div>

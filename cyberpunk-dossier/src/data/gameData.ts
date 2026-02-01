@@ -10,6 +10,7 @@ export interface SafetyItemAttributes {
     isSignalBlocking: boolean;
     isAnonymous: boolean;
     hasEncryptedComms: boolean;
+    providesOfflineNav: boolean;
 }
 
 export interface SafetyItem {
@@ -33,6 +34,7 @@ const DEFAULT_ATTRIBUTES: SafetyItemAttributes = {
     isSignalBlocking: false,
     isAnonymous: false,
     hasEncryptedComms: false,
+    providesOfflineNav: false,
 };
 
 export const AVAILABLE_ITEMS: SafetyItem[] = [
@@ -145,6 +147,7 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         sourceName: 'EFF Surveillance Self-Defense',
         attributes: {
             ...DEFAULT_ATTRIBUTES,
+            providesOfflineNav: true,
         },
         tags: ['nav'],
     },

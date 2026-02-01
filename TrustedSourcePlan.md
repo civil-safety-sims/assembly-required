@@ -278,12 +278,30 @@ interface TrustedSource {
 }
 ```
 
+### General Safety Guidance (Non-Item)
+
+The sources page should also include guidance that isn't tied to specific equipment but is essential for protest safety:
+
+| Topic | Description | Likely Sources |
+|-------|-------------|----------------|
+| Buddy System | Always attend with a trusted partner; check in regularly | Amnesty, NLG |
+| Rally Point | Pre-agree on a meeting location if separated | Amnesty, NRDC |
+| Exit Routes | Scout multiple escape paths before the event starts | DREDF, Amnesty |
+| OODA Loop | Observe-Orient-Decide-Act: situational awareness framework | CPJ |
+| Legal Observer Contact | Write NLG hotline number on your arm in permanent marker | NLG |
+| Jail Support | Know who to call if arrested; have a plan | NLG |
+| Medical Team Location | Identify street medic stations early | Street medic resources |
+| De-escalation | Recognizing when a situation is escalating and how to exit | Multiple |
+
+This content can be displayed as a "Before You Go" checklist or guidance section separate from the item-specific source links.
+
 ### Implementation Notes
 
 - Sources page pulls directly from `TRUSTED_SOURCES` array
 - No hardcoded links in UI - all sources come from registry
 - Consider grouping by topic (Legal, Medical, Digital, Physical Safety)
 - Mobile-friendly: sources should be tap-to-open links
+- General guidance section should be prominent - this is what users need most
 
 ---
 
