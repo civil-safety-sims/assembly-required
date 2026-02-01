@@ -50,7 +50,7 @@ Severity levels: `critical`, `warning`, `info`, `success`
 
 ## Phase 1: Source Registry
 
-Create a central registry to track all trusted sources with verification metadata.
+Create a central registry to track all trusted sources.
 
 ### Proposed File: `src/data/sources.ts`
 
@@ -60,7 +60,6 @@ interface TrustedSource {
   name: string;
   shortName: string;        // For display in UI
   url: string;
-  lastVerified: string;     // ISO date (YYYY-MM-DD)
   topics: string[];         // Categories this source covers
   notes?: string;           // Any caveats or context
 }
@@ -71,7 +70,6 @@ export const TRUSTED_SOURCES: TrustedSource[] = [
     name: 'Amnesty International Safety Toolkit',
     shortName: 'Amnesty International',
     url: 'https://www.amnestyusa.org/pdfs/SafeyDuringProtest_F.pdf',
-    lastVerified: '2026-01-XX',
     topics: ['clothing', 'eye-protection', 'general-safety'],
   },
   // ... existing sources
@@ -209,24 +207,24 @@ if (condition) {
 
 ---
 
-## Phase 4: Verification & Maintenance
-
-### Verification Checklist
+## Phase 4: Quality Checklist
 
 For each item/rule added:
 
 - [ ] Source URL is accessible and content matches claim
 - [ ] Linked to specific section (anchor link) where possible
-- [ ] Verification date recorded in sources registry
 - [ ] Cross-referenced with at least one other source (when possible)
-- [ ] Flagged for review if source document is >1 year old
 
-### Annual Review Process
+### Broken Link Handling
 
-1. Check all source URLs still resolve
-2. Review source documents for updated guidance
-3. Update `lastVerified` dates in sources registry
-4. Remove or update items if source guidance has changed
+If a source URL no longer exists or content has changed:
+
+1. File a bug report with:
+   - The broken/changed URL
+   - Which items/rules reference it
+   - Suggested replacement source (if known)
+2. Temporarily mark affected items with a note until resolved
+3. Do not remove safety guidance without a replacement source
 
 ---
 
@@ -277,10 +275,8 @@ interface TrustedSource {
   name: string;
   shortName: string;
   url: string;
-  lastVerified: string;
   topics: string[];
-  description: string;      // NEW: 1-2 sentence summary for UI display
-  tags: string[];           // NEW: filterable tags (comms, medical, legal, etc.)
+  description: string;      // 1-2 sentence summary for UI display
 }
 ```
 
@@ -297,7 +293,7 @@ interface TrustedSource {
 
 | File | Purpose |
 |------|---------|
-| `src/data/sources.ts` | Central source registry with verification metadata |
+| `src/data/sources.ts` | Central source registry |
 | `src/data/gameData.ts` | Expanded with new items from additional sources |
 | `src/logic/simulationEngine.ts` | Expanded with new rules for new attributes |
 | `src/components/SourcesPage.tsx` | NEW: In-app sources browser component |
