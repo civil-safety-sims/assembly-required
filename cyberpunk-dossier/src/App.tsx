@@ -8,8 +8,9 @@ import { DraggableItem } from './components/DraggableItem';
 import { AVAILABLE_ITEMS, type SafetyItem } from './data/gameData';
 import { runSimulation, type SimulationResult, type ThreatLevelType } from './logic/simulationEngine';
 import { ReportCard } from './components/ReportCard';
-import { Settings } from 'lucide-react';
+import { Settings, Book } from 'lucide-react';
 import { SettingsModal } from './components/SettingsModal';
+import { SourcesModal } from './components/SourcesModal';
 import { SignInputModal } from './components/SignInputModal';
 
 // Convert AVAILABLE_ITEMS to Item[] compatible format for the UI
@@ -113,6 +114,7 @@ function App() {
 
   // User Settings State
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isSourcesOpen, setIsSourcesOpen] = useState(false);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
 
   // Category Filter State
@@ -282,6 +284,15 @@ function App() {
 
         {/* Global UI Elements */}
 
+        {/* Sources Button */}
+        <button
+          onClick={() => setIsSourcesOpen(true)}
+          className="absolute top-4 right-16 z-40 p-2 text-slate-500 hover:text-emerald-500 hover:-translate-y-1 transition-all bg-slate-900/50 rounded-full border border-slate-700 hover:border-emerald-500/50 backdrop-blur-sm"
+          title="Trusted Sources & Guidance"
+        >
+          <Book size={20} />
+        </button>
+
         {/* Settings Button */}
         <button
           onClick={() => setIsSettingsOpen(true)}
@@ -290,6 +301,12 @@ function App() {
         >
           <Settings size={20} />
         </button>
+
+        {/* Sources Modal */}
+        <SourcesModal
+          isOpen={isSourcesOpen}
+          onClose={() => setIsSourcesOpen(false)}
+        />
 
         {/* Settings Modal */}
         <SettingsModal
