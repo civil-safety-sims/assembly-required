@@ -2,7 +2,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import type { Item } from '../types';
 import clsx from 'clsx';
-import { Box, GripVertical, Shirt, Package, Smartphone, Pill, Droplets, Eye, Signpost, Phone, Shield, Map, Square, Edit2, Sun, Footprints, Zap, ThermometerSun, Nut, Umbrella, BatteryCharging, Banknote, Snowflake } from 'lucide-react';
+import { Box, GripVertical, Shirt, Package, Smartphone, Pill, Droplets, Eye, Signpost, Phone, Shield, Map, Square, Edit2, Sun, Footprints, Zap, ThermometerSun, Nut, Umbrella, BatteryCharging, Banknote, Snowflake, Ear, Glasses, BriefcaseMedical, Camera, EyeOff } from 'lucide-react';
 
 interface DraggableItemProps {
     item: Item;
@@ -22,7 +22,6 @@ const ICON_MAP: Record<string, React.ReactNode> = {
     'Shield': <Shield size={20} />,
     'Map': <Map size={20} />,
     'Square': <Square size={20} />,
-    'Edit2': <Edit2 size={16} />,
     'Sun': <Sun size={20} />,
     'Footprints': <Footprints size={20} />,
     'Zap': <Zap size={20} />,
@@ -32,6 +31,13 @@ const ICON_MAP: Record<string, React.ReactNode> = {
     'BatteryCharging': <BatteryCharging size={20} />,
     'Banknote': <Banknote size={20} />,
     'Snowflake': <Snowflake size={20} />,
+    'Ear': <Ear size={20} />,
+    'Glasses': <Glasses size={20} />,
+    'Goggles': <Glasses size={20} />,
+    'BriefcaseMedical': <BriefcaseMedical size={20} />,
+    'Edit2': <Edit2 size={20} />,
+    'Camera': <Camera size={20} />,
+    'EyeOff': <EyeOff size={20} />,
 };
 
 export const DraggableItem = ({ item, hideLabel = false, onEdit }: DraggableItemProps) => {

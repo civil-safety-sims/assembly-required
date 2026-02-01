@@ -18,7 +18,7 @@ A guide for tracking trusted websites and converting their content into game rul
 | Committee to Protect Journalists (CPJ) | cpj.org (referenced in README, not yet used in items) | Physical safety |
 | Sins Invalid / DREDF | dredf.org/2020/06/16/know-your-rights-protesting-while-disabled/ | Disability rights, mobility aids, medications |
 | NRDC | nrdc.org/stories/how-protest-safely | Health, weather, hydration, sun/cold protection |
-| WITNESS | library.witness.org/product/filming-protests-demonstrations-usa/ | Ethical recording, protecting identities, filming police conduct |
+| WITNESS | https://witness.org/filming-protests-and-police-conduct-in-the-us/ | Ethical recording, protecting identities, filming police conduct |
 | Mutual Aid Disaster Relief | mutualaiddisasterrelief.org/wp-content/uploads/2020/04/kupdf.net_street-medic-handbook.pdf | Clothing, environmental health, dehydration, hypothermia |
 
 ### Current Item Attribute System (9 attributes)

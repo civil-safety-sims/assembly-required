@@ -361,6 +361,156 @@ export const runSimulation = (
         });
     }
 
+    // 18. Tear Gas Protection (DREDF)
+    // If ThreatLevel is High (CS Gas), check for protection.
+    if (threatLevel === 'High') {
+        const respiratoryProtection = equippedItems.filter(item => item.attributes.isRespirator);
+        const eyeProtection = equippedItems.filter(item => item.attributes.blocksChemical);
+
+        if (respiratoryProtection.length > 0) {
+            score += 10;
+            respiratoryProtection.forEach(item => {
+                feedback.push({
+                    message: `LUNG PROTECTION: ${item.name} filters particulates including CS gas. (+10 PTS)`,
+                    sourceUrl: item.sourceUrl,
+                    sourceName: item.sourceName,
+                    severity: 'success'
+                });
+            });
+        }
+
+        if (eyeProtection.length > 0) {
+            score += 10;
+            eyeProtection.forEach(item => {
+                feedback.push({
+                    message: `EYE SEAL: ${item.name} creates a seal against chemical agents. (+10 PTS)`,
+                    sourceUrl: item.sourceUrl,
+                    sourceName: item.sourceName,
+                    severity: 'success'
+                });
+            });
+        }
+    }
+
+    // 19. First Aid Utility
+    const firstAidItems = equippedItems.filter(item => item.attributes.isFirstAid);
+    if (firstAidItems.length > 0) {
+        score += 10;
+        firstAidItems.forEach(item => {
+            feedback.push({
+                message: `MEDIC READY: ${item.name} allows treatment of minor injuries on site. (+10 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'success'
+            });
+        });
+    }
+
+    // 20. Sensory Safety
+    const sensoryItems = equippedItems.filter(item => item.attributes.isSensoryAid);
+    if (sensoryItems.length > 0) {
+        score += 5;
+        sensoryItems.forEach(item => {
+            feedback.push({
+                message: `SENSORY AID: ${item.name} reduces sensory overload in chaotic environments. (+5 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'info'
+            });
+        });
+    }
+
+    // 21. Assistive Tech Power
+    const assistivePowerItems = equippedItems.filter(item => item.attributes.supportsAssistiveTech);
+    if (assistivePowerItems.length > 0) {
+        // Feedback already handled by generic "providesPower", but maybe add specific note?
+        // Actually, let's just stick to the generic power feedback to avoid double messaging, 
+        // OR add a specific "Assistive Tech" note if it's strictly better?
+        // For now, "providesPower" generic rule covers it.
+    }
+
+    // 22. Right to Record (WITNESS / First Amendment)
+    const documentationItems = equippedItems.filter(item => item.attributes.isDocumentation);
+    if (documentationItems.length > 0) {
+        score += 5; // Positive for exercising rights
+        documentationItems.forEach(item => {
+            feedback.push({
+                message: `RIGHT TO RECORD: Using ${item.name} to document events is a constitutional right. (+5 PTS)`,
+                sourceUrl: 'https://witness.org/how-to-film-a-protest/',
+                sourceName: 'WITNESS',
+                severity: 'info'
+            });
+        });
+
+        // 22b. Biometric Risk Check (while filming)
+        const bioItems = documentationItems.filter(item => item.attributes.isBiometric);
+        if (bioItems.length > 0) {
+            score -= 10;
+            bioItems.forEach(item => {
+                feedback.push({
+                    message: `BIOMETRIC RISK: Filming draws attention. ${item.name} (FaceID/TouchID) can be legally compelled to unlock. Disable it.`,
+                    sourceUrl: 'https://ssd.eff.org/module/attending-protest',
+                    sourceName: 'EFF / WITNESS',
+                    severity: 'warning'
+                });
+            });
+        }
+
+        // 22c. Privacy Warning (WITNESS)
+        // Check if user has tools to anonymize (Blur app, etc)
+        const privacyTools = equippedItems.filter(item => item.attributes.protectsPrivacy);
+        if (privacyTools.length === 0) {
+            score -= 5;
+            feedback.push({
+                message: `PRIVACY RISK: Filming without blurring faces endangers other protesters. Use an Image Scrubber or film from safe angles.`,
+                sourceUrl: 'https://witness.org/how-to-film-a-protest/',
+                sourceName: 'WITNESS',
+                severity: 'warning'
+            });
+        } else {
+            privacyTools.forEach(item => {
+                feedback.push({
+                    message: `ANONYMITY SECURED: ${item.name} helps scrub faces and metadata to protect identities. (+5 PTS)`,
+                    sourceUrl: 'https://witness.org/how-to-film-a-protest/',
+                    sourceName: 'WITNESS',
+                    severity: 'success'
+                });
+            });
+            score += 5;
+        }
+    }
+
+    // 23. Emergency Contact Info (Physical)
+    const emergencyInfoItems = equippedItems.filter(item => item.attributes.hasEmergencyContact);
+    if (emergencyInfoItems.length > 0) {
+        score += 10;
+        emergencyInfoItems.forEach(item => {
+            feedback.push({
+                message: `LEGAL LIFELINE: ${item.name} ensures legal support can be contacted if your phone is taken/broken. (+10 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'success'
+            });
+        });
+    }
+
+    // 24. Professional Media Gear (High Profile)
+    const pressItems = equippedItems.filter(item => item.attributes.isPress);
+    if (pressItems.length > 0) {
+        // Trade-off: Validates observer status (+), but attracts attention (-)
+        // Net effect: 0 score change, but specific Warning/Info feedback.
+        // Actually, CPJ says it can be dangerous. Let's make it a context-dependent warning?
+        // For simplicity: Warning about targeting.
+        pressItems.forEach(item => {
+            feedback.push({
+                message: `HIGH VISIBILITY: ${item.name} clearly identifies you as media/observer (+5), but makes you a priority target for police separation (-5).`,
+                sourceUrl: 'https://cpj.org/safety-kit/physical-safety-digital-safety/',
+                sourceName: 'CPJ',
+                severity: 'warning'
+            });
+        });
+    }
+
     // Clamp score
     score = Math.min(100, Math.max(0, score));
 

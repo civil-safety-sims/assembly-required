@@ -23,6 +23,17 @@ export interface SafetyItemAttributes {
     providesPower: boolean;
     isUntraceable: boolean;
     providesResource: boolean;
+    // New attributes from DREDF
+    blocksChemical: boolean;
+    isRespirator: boolean;
+    isFirstAid: boolean;
+    isSensoryAid: boolean;
+    supportsAssistiveTech: boolean;
+    // New attributes from WITNESS
+    isDocumentation: boolean;
+    hasEmergencyContact: boolean;
+    isPress: boolean; // Professional visibility
+    protectsPrivacy: boolean; // Blurs faces/scrubs metadata
 }
 
 export interface SafetyItem {
@@ -57,6 +68,15 @@ const DEFAULT_ATTRIBUTES: SafetyItemAttributes = {
     providesPower: false,
     isUntraceable: false,
     providesResource: false,
+    blocksChemical: false,
+    isRespirator: false,
+    isFirstAid: false,
+    isSensoryAid: false,
+    supportsAssistiveTech: false,
+    isDocumentation: false,
+    hasEmergencyContact: false,
+    isPress: false,
+    protectsPrivacy: false,
 };
 
 export const AVAILABLE_ITEMS: SafetyItem[] = [
@@ -118,6 +138,7 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         attributes: {
             ...DEFAULT_ATTRIBUTES,
             isBiometric: true,
+            isDocumentation: true, // Capability to record
         },
         tags: ['comms'],
     },
@@ -131,6 +152,7 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         attributes: {
             ...DEFAULT_ATTRIBUTES,
             hasEncryptedComms: true,
+            isDocumentation: true,
         },
         tags: ['comms'],
     },
@@ -144,6 +166,7 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         attributes: {
             ...DEFAULT_ATTRIBUTES,
             isAnonymous: true,
+            isDocumentation: true,
         },
         tags: ['comms'],
     },
@@ -249,6 +272,34 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         },
         tags: ['signs'],
     },
+    {
+        id: 'item-digital-camera',
+        name: 'Point & Shoot Camera',
+        icon: 'Camera',
+        slot: 'hands',
+        sourceUrl: 'https://witness.org/how-to-film-a-protest/',
+        sourceName: 'WITNESS',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isDocumentation: true,
+            isPress: false, // Low profile
+        },
+        tags: ['comms', 'documentation'],
+    },
+    {
+        id: 'item-pro-camera',
+        name: 'Pro DSLR Camera',
+        icon: 'Camera',
+        slot: 'hands', // Or neck? Hands is fine.
+        sourceUrl: 'https://cpj.org/safety-kit/physical-safety-digital-safety/',
+        sourceName: 'CPJ / WITNESS',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isDocumentation: true,
+            isPress: true, // High profile
+        },
+        tags: ['comms', 'press'],
+    },
     // MADR New Items
     {
         id: 'item-oil-sunscreen',
@@ -348,8 +399,9 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         attributes: {
             ...DEFAULT_ATTRIBUTES,
             providesPower: true,
+            supportsAssistiveTech: true,
         },
-        tags: ['tech', 'utility'],
+        tags: ['tech', 'utility', 'accessibility'],
     },
     {
         id: 'item-prescription-meds',
@@ -391,5 +443,112 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
             providesWarmth: true,
         },
         tags: ['clothing', 'weather'],
+    },
+    // DREDF New Items
+    {
+        id: 'item-ear-plugs',
+        name: 'Ear Plugs',
+        icon: 'Ear',
+        slot: 'head',
+        sourceUrl: 'https://dredf.org/know-your-rights-for-disabled-protestors-guide/',
+        sourceName: 'DREDF',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isSensoryAid: true,
+        },
+        tags: ['accessibility', 'sensory'],
+    },
+    {
+        id: 'item-sunglasses',
+        name: 'Sunglasses',
+        icon: 'Glasses',
+        slot: 'eyes',
+        sourceUrl: 'https://dredf.org/know-your-rights-for-disabled-protestors-guide/',
+        sourceName: 'DREDF',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isSensoryAid: true,
+        },
+        tags: ['accessibility', 'sensory'],
+    },
+    {
+        id: 'item-sealed-goggles',
+        name: 'Sealed Goggles',
+        icon: 'Goggles', // Mapped to Lucide icon later
+        slot: 'eyes',
+        sourceUrl: 'https://dredf.org/know-your-rights-for-disabled-protestors-guide/',
+        sourceName: 'DREDF',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            blocksChemical: true,
+        },
+        tags: ['protective', 'chemical'],
+    },
+    {
+        id: 'item-n95-mask',
+        name: 'N95 Mask',
+        icon: 'Mask', // Mapped to Lucide icon later (maybe Shield/Mask?)
+        slot: 'face',
+        sourceUrl: 'https://dredf.org/know-your-rights-for-disabled-protestors-guide/',
+        sourceName: 'DREDF',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isRespirator: true,
+        },
+        tags: ['protective', 'chemical', 'medical'],
+    },
+    {
+        id: 'item-first-aid-kit',
+        name: 'First Aid Kit',
+        icon: 'BriefcaseMedical',
+        slot: 'pockets',
+        sourceUrl: 'https://dredf.org/know-your-rights-for-disabled-protestors-guide/',
+        sourceName: 'DREDF',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isFirstAid: true,
+            isSterile: true,
+        },
+        tags: ['medical'],
+    },
+    {
+        id: 'item-image-scrubber',
+        name: 'Image Scrubber App',
+        icon: 'EyeOff',
+        slot: 'pockets', // Installed on phone really, but pockets checks out as "equipped"
+        sourceUrl: 'https://witness.org/how-to-film-a-protest/',
+        sourceName: 'WITNESS',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            protectsPrivacy: true,
+        },
+        tags: ['tech', 'privacy'],
+    },
+    {
+        id: 'item-image-scrubber',
+        name: 'Image Scrubber App',
+        icon: 'EyeOff',
+        slot: 'pockets', // Installed on phone really, but pockets checks out as "equipped"
+        sourceUrl: 'https://witness.org/how-to-film-a-protest/',
+        sourceName: 'WITNESS',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            protectsPrivacy: true,
+        },
+        tags: ['tech', 'privacy'],
+    },
+    // WITNESS New Items
+    {
+        id: 'item-emergency-info',
+        name: 'Emergency Info (Body Written)',
+        icon: 'Edit2', // Marker/Pen
+        slot: 'body', // "Written on body" -> body slot makes sense? Or arms/hands? Body is fine.
+        sourceUrl: 'https://witness.org/how-to-film-a-protest/',
+        sourceName: 'WITNESS',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            hasEmergencyContact: true,
+        },
+        tags: ['legal', 'safety'],
     },
 ];
