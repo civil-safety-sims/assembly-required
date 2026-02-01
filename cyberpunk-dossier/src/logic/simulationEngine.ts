@@ -21,8 +21,12 @@ export const runSimulation = (
     isPrecipitating: boolean,
     threatLevel: ThreatLevelType
 ): SimulationResult => {
-    let score = 100;
+    let score = 50;
     const feedback: FeedbackCard[] = [];
+
+    // Helper checks
+    const isChemicalThreat = threatLevel === 'High' || threatLevel === 'Medium';
+    const isKineticThreat = threatLevel === 'High';
 
     // Helper to deduplicate feedback if multiple items trigger same warning? 
     // Prompt implies checking items. "If user wears isAbsorbent items".
@@ -535,6 +539,69 @@ export const runSimulation = (
         });
     }
 
+    // 27. Improper PPE (OSHA) - False Sense of Security
+    const surgicalMasks = equippedItems.filter(item => item.id === 'item-surgical-mask');
+    if (surgicalMasks.length > 0 && isChemicalThreat) {
+        score -= 5;
+        surgicalMasks.forEach(item => {
+            feedback.push({
+                message: `FALSE SECURITY: ${item.name} provides NO protection against gas/smoke (it's not a respirator). (-5 PTS)`,
+                sourceUrl: 'https://www.osha.gov/respiratory-protection',
+                sourceName: 'OSHA',
+                severity: 'warning'
+            });
+        });
+    }
+
+    // 28. Impact Protection (OSHA Z87+)
+    const impactItems = equippedItems.filter(item => item.attributes.isImpactRated);
+    if (impactItems.length > 0 && isKineticThreat) { // Kinetic threats usually high threat police
+        score += 10;
+        impactItems.forEach(item => {
+            feedback.push({
+                message: `EYES SHIELDED: ${item.name} (Z87+) protects against impact/projectiles. (+10 PTS)`,
+                sourceUrl: 'https://www.osha.gov/eye-face-protection',
+                sourceName: 'OSHA',
+                severity: 'success'
+            });
+        });
+    }
+
+    // 29. Vapor Seal (OSHA)
+    const sealedItems = equippedItems.filter(item => item.attributes.isSealable);
+    if (sealedItems.length > 0 && isChemicalThreat) {
+        // Upgrade from basic blocksChemical if it seals
+        score += 5;
+        sealedItems.forEach(item => {
+            feedback.push({
+                message: `VAPOR SEAL: ${item.name} creates an airtight seal against chemical gas. (+5 PTS)`,
+                sourceUrl: 'https://www.osha.gov/eye-face-protection',
+                sourceName: 'OSHA',
+                severity: 'success'
+            });
+        });
+    }
+
+
+    // 30. Community Care (Disease Prevention)
+    // Any mask counts as source control/community care
+    const diseasePreventingItems = equippedItems.filter(item =>
+        item.id === 'item-surgical-mask' ||
+        item.id === 'item-n95-mask' ||
+        item.id === 'item-kn95-mask' ||
+        item.tags?.includes('medical')
+    );
+    // Deduplicate logic if needed, but for now check existence
+    if (diseasePreventingItems.length > 0) {
+        score += 5;
+        // Just one feedback card for the concept
+        feedback.push({
+            message: `COMMUNITY CARE: Wearing a mask (${diseasePreventingItems[0].name}) helps prevent the spread of disease. (+5 PTS)`,
+            sourceUrl: 'https://www.cdc.gov/coronavirus/2019-ncov/prevent-getting-sick/types-of-masks.html',
+            sourceName: 'CDC',
+            severity: 'success'
+        });
+    }
 
     // Clamp score
     score = Math.min(100, Math.max(0, score));

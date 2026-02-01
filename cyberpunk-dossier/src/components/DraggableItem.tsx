@@ -2,7 +2,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import type { Item } from '../types';
 import clsx from 'clsx';
-import { Box, GripVertical, Shirt, Package, Smartphone, Pill, Droplets, Eye, Signpost, Phone, Shield, Map, Square, Edit2, Sun, Footprints, Zap, ThermometerSun, Nut, Umbrella, BatteryCharging, Banknote, Snowflake, Ear, Glasses, BriefcaseMedical, Camera, EyeOff, Wallet } from 'lucide-react';
+import { Box, GripVertical, Shirt, Package, Smartphone, Pill, Droplets, Eye, Signpost, Phone, Shield, Map, Square, Edit2, Sun, Footprints, Zap, ThermometerSun, Nut, Umbrella, BatteryCharging, Banknote, Snowflake, Ear, Glasses, BriefcaseMedical, Camera, EyeOff, Wallet, Ghost } from 'lucide-react';
 
 interface DraggableItemProps {
     item: Item;
@@ -39,6 +39,8 @@ const ICON_MAP: Record<string, React.ReactNode> = {
     'Camera': <Camera size={20} />,
     'EyeOff': <EyeOff size={20} />,
     'Wallet': <Wallet size={20} />,
+    'Mask': <Shield size={20} />, // Fallback for protective masks
+    'Ghost': <Ghost size={20} />, // Anonymity
 };
 
 export const DraggableItem = ({ item, hideLabel = false, onEdit }: DraggableItemProps) => {

@@ -37,6 +37,9 @@ export interface SafetyItemAttributes {
     // New attributes from NLG
     isIdentifying: boolean;
     hasLegalContact: boolean;
+    // New attributes from OSHA
+    isImpactRated: boolean; // ANSI Z87+
+    isSealable: boolean; // Vapor seal
 }
 
 export interface SafetyItem {
@@ -82,6 +85,8 @@ const DEFAULT_ATTRIBUTES: SafetyItemAttributes = {
     protectsPrivacy: false,
     isIdentifying: false,
     hasLegalContact: false,
+    isImpactRated: false,
+    isSealable: false,
 };
 
 export const AVAILABLE_ITEMS: SafetyItem[] = [
@@ -486,6 +491,7 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         attributes: {
             ...DEFAULT_ATTRIBUTES,
             blocksChemical: true,
+            isSealable: true,
         },
         tags: ['protective', 'chemical'],
     },
@@ -571,5 +577,63 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
             hasLegalContact: true,
         },
         tags: ['legal', 'safety'],
+    },
+    // OSHA New Items
+    {
+        id: 'item-surgical-mask',
+        name: 'Surgical Mask',
+        icon: 'Mask',
+        slot: 'face',
+        sourceUrl: 'https://www.osha.gov/respiratory-protection',
+        sourceName: 'OSHA',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isAnonymous: true,
+            isRespirator: false, // Explicitly false
+        },
+        tags: ['protective', 'medical'],
+    },
+    {
+        id: 'item-safety-glasses',
+        name: 'Safety Glasses (Z87+)',
+        icon: 'Glasses',
+        slot: 'eyes',
+        sourceUrl: 'https://www.osha.gov/eye-face-protection',
+        sourceName: 'OSHA',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isImpactRated: true,
+            isSensoryAid: false,
+        },
+        tags: ['protective', 'safety'],
+    },
+    {
+        id: 'item-bandana',
+        name: 'Bandana',
+        icon: 'Ghost',
+        slot: 'face',
+        sourceUrl: 'https://witness.org/how-to-film-a-protest/',
+        sourceName: 'WITNESS',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isAnonymous: true,
+            isRespirator: false,
+            isFlammable: false, // Cotton usually
+        },
+        tags: ['clothing', 'privacy'],
+    },
+    {
+        id: 'item-kn95-mask',
+        name: 'KN95 Mask',
+        icon: 'Mask',
+        slot: 'face',
+        sourceUrl: 'https://www.cdc.gov/coronavirus/2019-ncov/prevent-getting-sick/types-of-masks.html',
+        sourceName: 'CDC',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isAnonymous: true,
+            isRespirator: true, // Filters particulates
+        },
+        tags: ['protective', 'medical', 'health'],
     },
 ];
