@@ -553,17 +553,26 @@ export const runSimulation = (
         });
     }
 
-    // 28. Impact Protection (OSHA Z87+)
+    // 28. Impact Protection (OSHA Z87+ / ASTM)
     const impactItems = equippedItems.filter(item => item.attributes.isImpactRated);
     if (impactItems.length > 0 && isKineticThreat) { // Kinetic threats usually high threat police
         score += 10;
         impactItems.forEach(item => {
-            feedback.push({
-                message: `EYES SHIELDED: ${item.name} (Z87+) protects against impact/projectiles. (+10 PTS)`,
-                sourceUrl: 'https://www.osha.gov/eye-face-protection',
-                sourceName: 'OSHA',
-                severity: 'success'
-            });
+            if (item.slot === 'eyes') {
+                feedback.push({
+                    message: `EYES SHIELDED: ${item.name} (Z87+) protects against impact/projectiles. (+10 PTS)`,
+                    sourceUrl: 'https://www.osha.gov/eye-face-protection',
+                    sourceName: 'OSHA',
+                    severity: 'success'
+                });
+            } else {
+                feedback.push({
+                    message: `FEET PROTECTED: ${item.name} protects against crushing injuries/projectiles. (+10 PTS)`,
+                    sourceUrl: 'https://www.reddit.com/r/PraxisGuides/',
+                    sourceName: 'Community Safety',
+                    severity: 'success'
+                });
+            }
         });
     }
 
@@ -578,6 +587,34 @@ export const runSimulation = (
                 sourceUrl: 'https://www.osha.gov/eye-face-protection',
                 sourceName: 'OSHA',
                 severity: 'success'
+            });
+        });
+    }
+
+    // 31. Mobility Bonus (Amnesty)
+    const mobilityItems = equippedItems.filter(item => item.attributes.providesMobility);
+    if (mobilityItems.length > 0) {
+        score += 5;
+        mobilityItems.forEach(item => {
+            feedback.push({
+                message: `AGILITY: ${item.name} helps you move quickly and escape danger. (+5 PTS)`,
+                sourceUrl: 'https://www.amnestyusa.org/pdfs/SafeyDuringProtest_F.pdf',
+                sourceName: 'Amnesty International',
+                severity: 'info' // Info/Success
+            });
+        });
+    }
+
+    // 32. Heavy Gear Fatigue
+    const heavyItems = equippedItems.filter(item => item.attributes.isHeavy);
+    if (heavyItems.length > 0) {
+        score -= 5;
+        heavyItems.forEach(item => {
+            feedback.push({
+                message: `FATIGUE RISK: ${item.name} is heavy and may tire you out over long durations. (-5 PTS)`,
+                sourceUrl: 'https://www.reddit.com/r/PraxisGuides/',
+                sourceName: 'Community Safety',
+                severity: 'warning'
             });
         });
     }

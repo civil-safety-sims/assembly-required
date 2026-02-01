@@ -90,7 +90,7 @@ export const SettingsModal = ({ isOpen, onClose, settings, onUpdateSettings }: S
                             <label htmlFor="corrective-lenses" className="text-sm text-slate-300 leading-relaxed cursor-pointer select-none">
                                 <span className="font-bold text-slate-200 block">Biometric: Corrective Lenses</span>
                                 <span className="text-xs text-slate-500 block mt-1">
-                                    "I require corrective lenses to see." (Disables Contact Lenses option)
+                                    "I require corrective lenses to see." (Enables corrective vision items)
                                 </span>
                             </label>
                         </div>

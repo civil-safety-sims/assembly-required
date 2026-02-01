@@ -38,7 +38,10 @@ export interface SafetyItemAttributes {
     isIdentifying: boolean;
     hasLegalContact: boolean;
     // New attributes from OSHA
-    isImpactRated: boolean; // ANSI Z87+
+    // New attributes from Footwear Expansion
+    providesMobility: boolean; // Running shoes
+    isHeavy: boolean; // Steel toe boots
+    isImpactRated: boolean; // ANSI Z87+ (Eyes) or ASTM (Feet)
     isSealable: boolean; // Vapor seal
 }
 
@@ -87,6 +90,8 @@ const DEFAULT_ATTRIBUTES: SafetyItemAttributes = {
     hasLegalContact: false,
     isImpactRated: false,
     isSealable: false,
+    providesMobility: false,
+    isHeavy: false,
 };
 
 export const AVAILABLE_ITEMS: SafetyItem[] = [
@@ -241,6 +246,8 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         attributes: {
             ...DEFAULT_ATTRIBUTES,
             isSterile: false, // Traps chemicals
+            isAbsorbent: true, // Traps gas/pepper spray
+            isSensoryAid: true, // Vision correction
         },
     },
     {
@@ -594,6 +601,20 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         tags: ['protective', 'medical'],
     },
     {
+        id: 'item-prescription-safety-glasses',
+        name: 'Rx Safety Glasses',
+        icon: 'Glasses',
+        slot: 'eyes',
+        sourceUrl: 'https://www.osha.gov/eye-face-protection',
+        sourceName: 'OSHA',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isImpactRated: true,
+            isSensoryAid: true, // Vision correction
+        },
+        tags: ['protective', 'safety', 'medical'],
+    },
+    {
         id: 'item-safety-glasses',
         name: 'Safety Glasses (Z87+)',
         icon: 'Glasses',
@@ -635,5 +656,65 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
             isRespirator: true, // Filters particulates
         },
         tags: ['protective', 'medical', 'health'],
+    },
+    {
+        id: 'item-running-shoes',
+        name: 'Running Shoes',
+        icon: 'Footprints',
+        slot: 'feet',
+        sourceUrl: 'https://www.amnestyusa.org/pdfs/SafeyDuringProtest_F.pdf',
+        sourceName: 'Amnesty International',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesMobility: true,
+            isOpenToed: false,
+        },
+        tags: ['clothing', 'mobility'],
+    },
+    {
+        id: 'item-steel-toe-boots',
+        name: 'Steel Toe Boots',
+        icon: 'Footprints',
+        slot: 'feet',
+        sourceUrl: 'https://www.reddit.com/r/PraxisGuides/',
+        sourceName: 'Community Safety',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            isHeavy: true,
+            isImpactRated: true, // Protection
+            isOpenToed: false,
+        },
+        tags: ['protective', 'clothing'],
+    },
+    {
+        id: 'item-hiking-boots',
+        name: 'Waterproof Hiking Boots',
+        icon: 'Footprints',
+        slot: 'feet',
+        sourceUrl: 'https://www.nrdc.org/stories/how-protest-safely',
+        sourceName: 'NRDC',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesWaterResistance: true,
+            providesMobility: true, // Moderate mobility
+            isOpenToed: false,
+        },
+        tags: ['clothing', 'weather'],
+    },
+    {
+        id: 'item-snow-boots',
+        name: 'Snow Boots',
+        icon: 'Snowflake',
+        slot: 'feet',
+        sourceUrl: 'https://mutualaiddisasterrelief.org/wp-content/uploads/2020/04/kupdf.net_street-medic-handbook.pdf',
+        sourceName: 'mutual-aid-disaster-relief',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesWarmth: true,
+            providesWaterResistance: true,
+            isHeavy: true,
+            isOpenToed: false,
+        },
+        tags: ['clothing', 'weather'],
     },
 ];

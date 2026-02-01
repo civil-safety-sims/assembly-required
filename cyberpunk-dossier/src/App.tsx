@@ -155,8 +155,9 @@ function App() {
         return false;
       }
 
-      // Hide contact lenses if corrective lenses are required (user wears glasses)
-      if (settings.requiresCorrectiveLenses && item.id === 'item-contact-lenses') {
+      // Show corrective vision items (Contact Lenses, Rx Safety Glasses) only if user requires them
+      const safetyItem = AVAILABLE_ITEMS.find(si => si.id === item.id);
+      if (!settings.requiresCorrectiveLenses && safetyItem?.attributes.isSensoryAid && (item.id === 'item-contact-lenses' || item.id === 'item-prescription-safety-glasses')) {
         return false;
       }
 
