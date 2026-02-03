@@ -159,17 +159,26 @@ export const runSimulation = (
         });
     }
 
-    // 7. Positive: Anonymity (Burner Phone)
+    // 7. Positive: Anonymity (Burner Phone / Masks / Umbrella)
     const anonymousItems = equippedItems.filter(item => item.attributes.isAnonymous);
     if (anonymousItems.length > 0) {
         score += 10;
         anonymousItems.forEach(item => {
-            feedback.push({
-                message: `ANONYMITY PRESERVED: ${item.name} protects your identity by decoupling your comms from your personal ID. (+10 PTS)`,
-                sourceUrl: item.sourceUrl,
-                sourceName: item.sourceName,
-                severity: 'success'
-            });
+            if (item.tags?.includes('comms')) {
+                feedback.push({
+                    message: `ANONYMITY PRESERVED: ${item.name} protects your identity by decoupling your comms from your personal ID. (+10 PTS)`,
+                    sourceUrl: item.sourceUrl,
+                    sourceName: item.sourceName,
+                    severity: 'success'
+                });
+            } else {
+                feedback.push({
+                    message: `VISUAL OBSCURITY: ${item.name} blocks face recognition and overhead surveillance. (+10 PTS)`,
+                    sourceUrl: item.sourceUrl,
+                    sourceName: item.sourceName,
+                    severity: 'success'
+                });
+            }
         });
     }
 
@@ -662,6 +671,20 @@ export const runSimulation = (
 
     // Clamp score
     score = Math.min(100, Math.max(0, score));
+
+    // 11. Negative: Weapon Misinterpretation (Umbrella / Baseball Bat etc)
+    const weaponLikeItems = equippedItems.filter(item => item.attributes.looksLikeWeapon);
+    if (weaponLikeItems.length > 0 && threatLevel === 'High') {
+        score -= 10;
+        weaponLikeItems.forEach(item => {
+            feedback.push({
+                message: `TARGETED: Security forces classified your ${item.name} as a weapon in this high-tension context. (-10 PTS)`,
+                sourceUrl: item.sourceUrl,
+                sourceName: item.sourceName,
+                severity: 'critical'
+            });
+        });
+    }
 
     return {
         score,

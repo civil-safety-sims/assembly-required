@@ -45,6 +45,7 @@ export interface SafetyItemAttributes {
     isSealable: boolean; // Vapor seal
     // New attributes from DREDF Mobility
     isMobilityAid: boolean; // Assists with mobility or extended standing/sitting
+    looksLikeWeapon: boolean; // Risk of being misinterpreted (e.g., Baseball Bat, Umbrella)
 }
 
 export interface SafetyItem {
@@ -95,6 +96,7 @@ const DEFAULT_ATTRIBUTES: SafetyItemAttributes = {
     providesMobility: false,
     isHeavy: false,
     isMobilityAid: false,
+    looksLikeWeapon: false,
 };
 
 export const AVAILABLE_ITEMS: SafetyItem[] = [
@@ -396,6 +398,21 @@ export const AVAILABLE_ITEMS: SafetyItem[] = [
         },
     },
     // NRDC New Items
+    {
+        id: 'item-umbrella',
+        name: 'Umbrella',
+        icon: 'Umbrella',
+        slot: 'hands',
+        sourceUrl: 'https://en.wikipedia.org/wiki/Umbrella_Movement',
+        sourceName: 'The "Umbrella Movement" (Historical)',
+        attributes: {
+            ...DEFAULT_ATTRIBUTES,
+            providesWaterResistance: true,
+            isAnonymous: true, // Blocks overhead cameras & pepper spray
+            looksLikeWeapon: true, // Risk of being charged with "intent to harm" or "possession of weapon"
+        },
+        tags: ['weather', 'privacy', 'historical', 'risky'],
+    },
     {
         id: 'item-rain-poncho',
         name: 'Rain Poncho',
