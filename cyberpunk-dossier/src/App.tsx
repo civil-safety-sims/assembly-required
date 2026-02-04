@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react'; // Added useEffect
+import LZString from 'lz-string'; // Added compression lib
 import { SupplyCache } from './components/SupplyCache';
 import { Activist } from './components/Activist';
 import { Briefing } from './components/Briefing';
@@ -9,7 +10,7 @@ import { DraggableItem } from './components/DraggableItem';
 import { AVAILABLE_ITEMS, type SafetyItem } from './data/gameData';
 import { runSimulation, type SimulationResult, type ThreatLevelType } from './logic/simulationEngine';
 import { ReportCard } from './components/ReportCard';
-import { Settings, Book } from 'lucide-react';
+import { Settings, Book, Share2 } from 'lucide-react';
 import { SettingsModal } from './components/SettingsModal';
 import { SourcesModal } from './components/SourcesModal';
 import { SignInputModal } from './components/SignInputModal';
@@ -142,6 +143,51 @@ function App() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  // Load from URL Hash on Mount
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.startsWith('#loadout=')) {
+      const encrypted = hash.replace('#loadout=', '');
+      try {
+        const decompressed = LZString.decompressFromEncodedURIComponent(encrypted);
+        if (decompressed) {
+          const data = JSON.parse(decompressed);
+          const equippedIds = data.e || {};
+          const customTextMap = data.t || {};
+
+          // Rebuild State
+          const newEquipped: Record<string, Item | null> = { ...INITIAL_EQUIPPED };
+          const usedItemIds = new Set<string>();
+
+          // Restore Equipped
+          Object.entries(equippedIds).forEach(([slot, id]) => {
+            const originalItem = UI_ITEMS.find(i => i.id === id);
+            if (originalItem) {
+              const itemWithState = { ...originalItem };
+              if (customTextMap[id as string]) itemWithState.customText = customTextMap[id as string];
+              newEquipped[slot] = itemWithState;
+              usedItemIds.add(id as string);
+            }
+          });
+
+          // Restore Cache (Anything not equipped)
+          const newCache = UI_ITEMS.filter(i => !usedItemIds.has(i.id)).map(i => {
+            if (customTextMap[i.id]) {
+              return { ...i, customText: customTextMap[i.id] };
+            }
+            return i;
+          });
+
+          setEquippedItems(newEquipped);
+          setCacheItems(newCache);
+          // Clear the hash after loading? Optional. Keeping it lets them refresh.
+        }
+      } catch (e) {
+        console.error("Failed to load loadout:", e);
+      }
+    }
+  }, []);
 
   // Filter items based on category and settings
   const filteredItems = useMemo(() => {
@@ -301,6 +347,44 @@ function App() {
       <div className="min-h-screen bg-slate-950 text-slate-200 p-4 md:p-8 font-mono relative overflow-hidden selection:bg-cyan-500/30">
 
         {/* Global UI Elements */}
+
+        {/* Share Button */}
+        <button
+          onClick={() => {
+            // Serialize
+            const equippedIds: Record<string, string> = {};
+            Object.entries(equippedItems).forEach(([slot, item]) => {
+              if (item) equippedIds[slot] = item.id;
+            });
+
+            const customTextMap: Record<string, string> = {};
+            // Check equipped
+            Object.values(equippedItems).forEach(item => {
+              if (item && item.customText) customTextMap[item.id] = item.customText;
+            });
+            // Check cache
+            cacheItems.forEach(item => {
+              if (item.customText) customTextMap[item.id] = item.customText;
+            });
+
+            const loadoutData = { e: equippedIds, t: customTextMap };
+            const compressed = LZString.compressToEncodedURIComponent(JSON.stringify(loadoutData));
+            const url = `${window.location.origin}${window.location.pathname}#loadout=${compressed}`;
+
+            // Update URL
+            window.history.replaceState(null, '', `#loadout=${compressed}`);
+
+            // Copy to Clipboard
+            navigator.clipboard.writeText(url).then(() => {
+              // Show temporary success state or toast
+              alert('Loadout link copied to clipboard!');
+            });
+          }}
+          className="absolute top-4 right-28 z-40 p-2 text-slate-500 hover:text-blue-400 hover:-translate-y-1 transition-all bg-slate-900/50 rounded-full border border-slate-700 hover:border-blue-500/50 backdrop-blur-sm"
+          title="Share Loadout"
+        >
+          <Share2 size={20} />
+        </button>
 
         {/* Sources Button */}
         <button
